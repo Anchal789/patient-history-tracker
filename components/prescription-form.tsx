@@ -40,6 +40,7 @@ import { PrescriptionPrint } from "@/components/prescription-print";
 import { getAllMedicines } from "@/lib/realtime-database-service-medicines";
 import { getAllDiagnoses } from "@/lib/realtime-database-service-diagnoses";
 import type { SavedMedicine, CommonDiagnosis } from "@/lib/types";
+import TemplateImage from "../assets/Template.jpg"
 
 interface PrescriptionFormProps {
   patientId: string;

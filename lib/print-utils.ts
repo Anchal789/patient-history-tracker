@@ -1,5 +1,7 @@
 import type { Patient, Prescription, Medicine, PrintConfig } from "./types"
 import { format } from "date-fns"
+import TemplateImage from "../assets/Template.jpg"
+import { ReactNode } from "react"
 
 // Default print configuration
 export const defaultPrintConfig: PrintConfig = {
@@ -22,30 +24,31 @@ export const generateAppointmentId = (): string => {
 }
 
 // Helper function to format the dosage instruction
-export const formatDosageInstruction = (medicine: Medicine): string => {
+export const formatDosageInstruction = (medicine: Medicine): ReactNode => {
   // Group dosages by time
   const timingMap: Record<string, string> = {}
-  medicine.dosage.forEach((d) => {
-    timingMap[d.time] = d.quantity
-  })
+//   medicine.dosage.forEach((d) => {
+//     timingMap[d.time] = d.quantity
+//   })
+//   // Create a string like "1-0-1" for morning-afternoon-evening
+//   const pattern = ["Morning", "Afternoon", "Evening", "Night"].map((time) => timingMap[time] || "0").join("-")
 
-  // Create a string like "1-0-1" for morning-afternoon-evening
-  const pattern = ["Morning", "Afternoon", "Evening"].map((time) => timingMap[time] || "0").join("-")
-
-  // Get the instruction from the first dosage (assuming all have same instructions)
-  const instruction = medicine.dosage.length > 0 ? medicine.dosage[0].instructions : ""
+//   // Get the instruction from the first dosage (assuming all have same instructions)
+//   const instruction = medicine.dosage.length > 0 ? medicine.dosage[0].instructions : ""
 
   // Add duration
   let durationText = ""
   if (medicine.duration.days > 0) {
-    durationText = `for ${medicine.duration.days} days`
-  } else if (medicine.duration.months > 0) {
-    durationText = `for ${medicine.duration.months} months`
-  } else if (medicine.duration.years > 0) {
-    durationText = `for ${medicine.duration.years} years`
+    durationText = `${medicine.duration.days} दिन`
+  } 
+   if (medicine.duration.months > 0) {
+    durationText = durationText + ` ${medicine.duration.months} महीने`
+  } 
+  if (medicine.duration.years > 0) {
+    durationText =  durationText + ` ${medicine.duration.years} वर्ष`
   }
 
-  return `${pattern}\n${instruction} ${durationText}`
+  return `<div class="medicineQuantity">${medicine.dosage.length > 0 ? medicine.dosage.map((item)=> `<p>${item.quantity} - ${item.instructions}</p>`).join("") : ""}<br/>${durationText}</div>`
 }
 
 // Function to generate prescription print HTML
@@ -78,14 +81,13 @@ export const generatePrescriptionHTML = (
       (med, index) => `
     <tr>
       <td>${index + 1}</td>
-      <td>${med.name} ${med.type}</td>
+      <td>${med.name} (${med.type})</td>
       <td>${formatDosageInstruction(med)}</td>
     </tr>
   `,
     )
     .join("")
 
-  // Generate the HTML with styling that matches the letterhead
   return `
     <!DOCTYPE html>
     <html>
@@ -105,8 +107,26 @@ export const generatePrescriptionHTML = (
             font-family: Arial, sans-serif;
             font-size: 11pt;
           }
+          .image {
+            max-width: 100%;
+            height: 100vh;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -1;
+          }
           .letterhead {
-            padding: 20px 30px;
+            border: 1px solid #ccc;
+            height : 745px;
+            position: relative;
+            margin-top: 230px;
+            display: grid;
+            grid-template-columns: 24% 70%;
+            grid-gap: 10px;
+          }
+          .image{
+            max-width : 800px;
+            position: absolute;
           }
           .header {
             display: flex;
@@ -130,16 +150,64 @@ export const generatePrescriptionHTML = (
             font-size: 12pt;
           }
           .patient-info {
-            display: flex;
-            justify-content: space-between;
             margin-bottom: 20px;
-            border-bottom: 1px solid #000;
-            padding-bottom: 10px;
+          }
+          .name {
+            margin-top: 8px;
+            margin-left: 40px;
+          }
+          .date {
+            margin-top: 8px;
+            margin-left: 42px;
+          }
+          .age {
+          margin-top: -1px;
+          margin-left: 72px;
+          }
+          .nameDate{
+            display : flex;
+            justify-content: space-between;
+          }
+          .address{
+            margin-top: -1px;
+            margin-left: 55px;
+          }
+          .ageAddress{
+            display : flex;
+          }
+          .patientId{
+            margin-left : 9px;
           }
           .vitals {
+            margin-top: 404px;
+            gap: 17px;
+            text-align: end;
+            display : flex;
+            flex-direction: column;
+            font-size: large;
+          }
+          .chiefComplaints{
+            margin-left: 60px;  
+          }
+          .chiefComplaints p{
+            margin: 0;  
+          }
+          .exam-notes{
+            margin-left: 60px;
+          }
+          .diagnosis{
+            margin-left: 60px;
+          }
+          .medicines{
+            margin-left: 12px;
+          }
+          .medicineQuantity{
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap:10px;
+          }
+          .medicineQuantity p{
+            margin : 0;
           }
           .section-title {
             font-weight: bold;
@@ -189,15 +257,21 @@ export const generatePrescriptionHTML = (
         body {
           font-family: Arial, sans-serif;
           margin: 0;
-          padding: 20px;
           max-width: 800px;
           margin: 0 auto;
-          font-size: 11pt;
         }
         .letterhead {
           border: 1px solid #ccc;
-          padding: 20px 30px;
-          margin-bottom: 20px;
+          height : 745px;
+          position: relative;
+          margin-top: 200px;
+          display: grid;
+          grid-template-columns: 24% 70%;
+          grid-gap: 10px;
+        }
+        .image{
+           max-width : 800px;
+           position: absolute;
         }
         .header {
           display: flex;
@@ -221,16 +295,64 @@ export const generatePrescriptionHTML = (
           font-size: 12pt;
         }
         .patient-info {
-          display: flex;
-          justify-content: space-between;
           margin-bottom: 20px;
-          border-bottom: 1px solid #000;
-          padding-bottom: 10px;
+        }
+        .name {
+          margin-top: 8px;
+          margin-left: 40px;
+        }
+        .date {
+          margin-top: 8px;
+          margin-left: 42px;
+        }
+        .age {
+         margin-top: -1px;
+         margin-left: 72px;
+        }
+        .nameDate{
+          display : flex;
+          justify-content: space-between;
+        }
+        .address{
+          margin-top: -1px;
+          margin-left: 55px;
+        }
+        .ageAddress{
+          display : flex;
+        }
+        .patientId{
+          margin-left : 9px;
         }
         .vitals {
+          margin-top: 444px;
+          gap: 17px;
+          text-align: end;
+          display : flex;
+          flex-direction: column;
+          font-size: large;
+        }
+        .chiefComplaints{
+          margin-left: 60px;  
+        }
+        .chiefComplaints p{
+          margin: 0;  
+        }
+        .exam-notes{
+          margin-left: 60px;
+        }
+        .diagnosis{
+          margin-left: 60px;
+        }
+        .medicines{
+          margin-left: 12px;
+        }
+        .medicineQuantity{
           display: flex;
-          justify-content: space-between;
-          margin-bottom: 10px;
+          flex-wrap: wrap;
+          gap:10px;
+        }
+        .medicineQuantity p{
+          margin : 0;
         }
         .section-title {
           font-weight: bold;
@@ -293,97 +415,83 @@ export const generatePrescriptionHTML = (
         <button class="print-btn" onclick="window.print()">Print Prescription</button>
       </div>
       
-      <div class="letterhead">
-        <div class="header">
-          <div class="hospital-info">
-            <div class="hospital-name">${config.hospitalName}</div>
-            <div>${config.hospitalAddress}</div>
-            <div>${config.hospitalContact}</div>
-          </div>
-          <div class="doctor-info">
-            <div class="doctor-name">${config.doctorName}</div>
-            <div>${config.doctorQualification}</div>
-            <div>${config.doctorRegistration}</div>
-          </div>
-        </div>
-        
-        <div class="patient-info">
-          <div>
-            <strong>Name:</strong> ${patient.name} (${patient.gender}, ${patient.age} Years)<br>
-            <strong>Date & Time:</strong> ${format(prescDate, "dd-MMM-yyyy; hh:mm a")}
-          </div>
-          <div>
-            <strong>Patient ID:</strong> ${prescription.patientId.substring(0, 10).toUpperCase()}
-          </div>
-        </div>
-        
-        <div>
-          <div class="section-title">CHIEF COMPLAINTS:</div>
-          <div>${prescription.chiefComplaints || "None specified"}</div>
-        </div>
-        
+      <img class="image" src="${TemplateImage.src}"/>
+      <div class="letterhead">   
         <div class="vitals">
-          <div><strong>TEMPERATURE:</strong> ${prescription.temperature || "--"}°F</div>
-          <div><strong>PULSE:</strong> ${prescription.pulse || "--"} bpm</div>
+          <div>${prescription.pulse || "--"}</div>
+          <div>${prescription.bloodPressure || "--"}</div>
+          <div>${prescription.weight || "--"}</div>
+          <div>${prescription.temperature || prescription.afebrileTemperature ? "Afebrile" : "__"}</div>
+          <div>${"___"}</div>
           <div><strong>RESP RATE:</strong> ${prescription.respRate || "--"} rpm</div>
-          <div><strong>BP:</strong> ${prescription.bloodPressure || "--"} mmHg</div>
           ${prescription.spo2 ? `<div><strong>SPO2:</strong> ${prescription.spo2}%</div>` : ""}
         </div>
         
-        <div class="exam-notes">
-          <div class="section-title">EXAMINATION NOTES:</div>
-          <ul>${examItems || "<li>None</li>"}</ul>
-        </div>
-        
         <div>
-          <div class="section-title">DIAGNOSIS:</div>
-          <div>${prescription.diagnosis || "Not specified"}</div>
-        </div>
+          <div class="patient-info">
+            <div class="nameDate">
+              <p class="name">${patient?.name}</p>
+              <p class="date">${format(prescDate, "dd-MMM-yyyy")}</p>
+            </div>
+             <div class="ageAddress">
+                <p class="age">${patient?.age}/${patient?.gender}</p>
+                <p class="address">${patient?.address || "address"}</p>
+              </div>
+              <strong class="patientId">Patient ID:</strong> ${prescription.patientId.substring(0, 10).toUpperCase()}
+          </div>
+          
+          <div class="chiefComplaints">
+            <b>Chief Complaints:</b>
+            <p>${prescription.chiefComplaints || "None specified"}</p>
+          </div>
+          
+          <div class="exam-notes">
+            <div class="section-title">EXAMINATION NOTES:</div>
+            <ul>${examItems || "<li>None</li>"}</ul>
+          </div>
+          
+          <div class="diagnosis">
+            <div class="section-title">DIAGNOSIS:</div>
+            <div>${prescription.diagnosis || "Not specified"}</div>
+          </div>
+          
+          <div class="medicines">
+            <table>
+              <thead>
+                <tr>
+                  <th>Sl</th>
+                  <th>Medicine Name</th>
+                  <th>Regime and Instruction</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${medicineRows}
+              </tbody>
+            </table>
+          </div>
+          
+          ${
+            prescription.specialAdvice
+              ? `
+          <div class="advice">
+            <div class="section-title">ADVICE:</div>
+            <ul>${adviceItems}</ul>
+          </div>
+          `
+              : ""
+          }
+          
+          ${
+            prescription.followUpDate
+              ? `
+          <div class="follow-up">
+            <strong>FOLLOW UP:</strong> Scheduled a follow-up appt. for ${format(new Date(prescription.followUpDate), "do MMMM, yyyy")} at ${format(new Date(prescription.followUpDate), "hh:mm a")}
+            ${prescription.appointmentId ? `<br><strong>Appointment ID - </strong> ${prescription.appointmentId}` : ""}
+          </div>
+          `
+              : ""
+          }
         
-        <div>
-          <div class="section-title">&#8478;</div>
-          <table>
-            <thead>
-              <tr>
-                <th>Sl</th>
-                <th>Medicine Name</th>
-                <th>Regime and Instruction</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${medicineRows}
-            </tbody>
-          </table>
-        </div>
-        
-        ${
-          prescription.specialAdvice
-            ? `
-        <div class="advice">
-          <div class="section-title">ADVICE:</div>
-          <ul>${adviceItems}</ul>
-        </div>
-        `
-            : ""
-        }
-        
-        ${
-          prescription.followUpDate
-            ? `
-        <div class="follow-up">
-          <strong>FOLLOW UP:</strong> Scheduled a follow-up appt. for ${format(new Date(prescription.followUpDate), "do MMMM, yyyy")} at ${format(new Date(prescription.followUpDate), "hh:mm a")}
-          ${prescription.appointmentId ? `<br><strong>Appointment ID - </strong> ${prescription.appointmentId}` : ""}
-        </div>
-        `
-            : ""
-        }
-        
-        <div class="signature">
-          ${config.doctorName}
-        </div>
-        
-        <div class="footer">
-          Powered by Bajaj Finserv Health Limited
         </div>
       </div>
     </body>

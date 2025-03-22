@@ -14,6 +14,7 @@ export default function Home() {
 
   useEffect(() => {
     const checkInitialization = async () => {
+      redirect("/dashboard")
       try {
         // Check if local storage has an initialization flag
         const initialized = localStorage.getItem("app_initialized")
