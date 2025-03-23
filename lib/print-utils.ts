@@ -101,32 +101,25 @@ export const generatePrescriptionHTML = (
             margin: 0;
           }
           body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
             font-family: Arial, sans-serif;
-            font-size: 11pt;
-          }
-          .image {
-            max-width: 100%;
-            height: 100vh;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: -1;
+            margin: 0;
+            max-width: 800px;
+            margin: 0;
           }
           .letterhead {
             border: 1px solid #ccc;
-            height : 745px;
+            height: auto;
+            min-height: 745px;
             position: relative;
-            margin-top: 230px;
             display: grid;
+            max-width: 800px;
             grid-template-columns: 24% 70%;
             grid-gap: 10px;
           }
           .image{
             max-width : 800px;
             position: absolute;
+            height: 100vh;
           }
           .header {
             display: flex;
@@ -179,12 +172,16 @@ export const generatePrescriptionHTML = (
             margin-left : 9px;
           }
           .vitals {
-            margin-top: 404px;
+            margin-top: 611px;
             gap: 17px;
             text-align: end;
             display : flex;
             flex-direction: column;
             font-size: large;
+          }
+          .mainContent{
+            margin-top : 250px;
+            overflow: hidden;
           }
           .chiefComplaints{
             margin-left: 60px;  
@@ -231,11 +228,6 @@ export const generatePrescriptionHTML = (
             margin: 5px 0;
             padding-left: 20px;
           }
-          .follow-up {
-            margin-top: 20px;
-            padding: 10px 0;
-            border-top: 1px solid #000;
-          }
           .signature {
             text-align: right;
             margin-top: 40px;
@@ -247,9 +239,14 @@ export const generatePrescriptionHTML = (
             border-top: 1px solid #000;
             padding-top: 5px;
           }
+          .idFollowup{
+            display :flex;
+            justify-content: space-between;
+            width : 100&;
+          }
           /* Hide print button when printing */
           .no-print {
-            display: none !important;
+            display: none;
           }
         }
         
@@ -258,16 +255,20 @@ export const generatePrescriptionHTML = (
           font-family: Arial, sans-serif;
           margin: 0;
           max-width: 800px;
-          margin: 0 auto;
+          margin: 0;
+          margin-bottom: 100px;
         }
         .letterhead {
           border: 1px solid #ccc;
           height : 745px;
           position: relative;
-          margin-top: 200px;
           display: grid;
+          max-width: 800px;
           grid-template-columns: 24% 70%;
           grid-gap: 10px;
+          page-break-inside: auto;
+          /* Ensure the entire letterhead starts on a new page if needed */
+          page-break-before: auto;
         }
         .image{
            max-width : 800px;
@@ -303,18 +304,18 @@ export const generatePrescriptionHTML = (
         }
         .date {
           margin-top: 8px;
-          margin-left: 42px;
+          margin-right: -11px;
         }
         .age {
-         margin-top: -1px;
-         margin-left: 72px;
+         margin-top: 2px;
+         margin-left: 67px;
         }
         .nameDate{
           display : flex;
           justify-content: space-between;
         }
         .address{
-          margin-top: -1px;
+          margin-top: 2px;
           margin-left: 55px;
         }
         .ageAddress{
@@ -324,12 +325,18 @@ export const generatePrescriptionHTML = (
           margin-left : 9px;
         }
         .vitals {
-          margin-top: 444px;
+          margin-top: 671px;
           gap: 17px;
           text-align: end;
           display : flex;
           flex-direction: column;
           font-size: large;
+        }
+        .mainContent{
+          margin-top : 220px;
+          max-height: calc(100vh - 190px); /* Viewport height minus margins and header */
+          overflow: hidden;
+
         }
         .chiefComplaints{
           margin-left: 60px;  
@@ -376,11 +383,7 @@ export const generatePrescriptionHTML = (
           margin: 5px 0;
           padding-left: 20px;
         }
-        .follow-up {
-          margin-top: 20px;
-          padding: 10px 0;
-          border-top: 1px solid #000;
-        }
+        
         .signature {
           text-align: right;
           margin-top: 40px;
@@ -391,6 +394,11 @@ export const generatePrescriptionHTML = (
           font-size: 9pt;
           border-top: 1px solid #000;
           padding-top: 5px;
+        }
+        .idFollowup{
+          display :flex;
+          justify-content: space-between;
+          width : 100&;
         }
         .print-btn {
           background-color: #4CAF50;
@@ -406,7 +414,7 @@ export const generatePrescriptionHTML = (
           background-color: #45a049;
         }
         .no-print {
-          display: block;
+          display: none;
         }
       </style>
     </head>
@@ -427,7 +435,7 @@ export const generatePrescriptionHTML = (
           ${prescription.spo2 ? `<div><strong>SPO2:</strong> ${prescription.spo2}%</div>` : ""}
         </div>
         
-        <div>
+        <div class="mainContent">
           <div class="patient-info">
             <div class="nameDate">
               <p class="name">${patient?.name}</p>
@@ -437,7 +445,18 @@ export const generatePrescriptionHTML = (
                 <p class="age">${patient?.age}/${patient?.gender}</p>
                 <p class="address">${patient?.address || "address"}</p>
               </div>
-              <strong class="patientId">Patient ID:</strong> ${prescription.patientId.substring(0, 10).toUpperCase()}
+              <div class="idFollowup">
+               <div class="follow-up">
+              <strong class="patientId">Patient ID:</strong> ${prescription.patientId.substring(0, 10).toUpperCase()}  </div> ${
+            prescription.followUpDate
+              ? `
+          <div class="follow-up">
+            <strong>Follow up:</strong> ${format(new Date(prescription.followUpDate), "do MMMM, yyyy")}
+          </div>
+          `
+              : ""
+          }
+              </div>
           </div>
           
           <div class="chiefComplaints">
@@ -480,17 +499,6 @@ export const generatePrescriptionHTML = (
           `
               : ""
           }
-          
-          ${
-            prescription.followUpDate
-              ? `
-          <div class="follow-up">
-            <strong>FOLLOW UP:</strong> Scheduled a follow-up appt. for ${format(new Date(prescription.followUpDate), "do MMMM, yyyy")} at ${format(new Date(prescription.followUpDate), "hh:mm a")}
-            ${prescription.appointmentId ? `<br><strong>Appointment ID - </strong> ${prescription.appointmentId}` : ""}
-          </div>
-          `
-              : ""
-          }
         
         </div>
       </div>
@@ -500,25 +508,107 @@ export const generatePrescriptionHTML = (
 }
 
 // Function to open the print dialog
+// Function to handle content overflow and page breaks
+const handlePageOverflow = () => {
+  // This function will be injected into the print window
+  return `
+    function insertPageBreaks() {
+      // Get viewport height (A4 page height in print mode)
+      const pageHeight = 1122; // A4 height in pixels at 96 DPI
+      const breakPoint = pageHeight - 90; // Point where we need to break (90px from bottom)
+      
+      // Get the main content container
+      const mainContent = document.querySelector('.mainContent');
+      if (!mainContent) return;
+      
+      // Get all potential elements that could need breaking
+      const contentElements = mainContent.querySelectorAll(' .chiefComplaints,.exam-notes,.diagnosis,.medicines,.advice,');
+      
+      // Function to check if element crosses the threshold
+      function needsPageBreak(element) {
+        const rect = element.getBoundingClientRect();
+        const elementBottom = rect.bottom;
+        return elementBottom > breakPoint;
+      }
+      
+      // Find the first element that crosses our threshold
+      let breakElement = null;
+      for (let i = 0; i < contentElements.length; i++) {
+        if (needsPageBreak(contentElements[i])) {
+          breakElement = contentElements[i];
+          break;
+        }
+      }
+      
+      // If we found an element that needs breaking
+      if (breakElement) {
+        // Insert page break before this element
+        breakElement.style.pageBreakBefore = 'always';
+        
+        // Add top margin to this element to start at 300px on next page
+        breakElement.style.marginTop = '300px';
+        
+        // Create new container for the next page if needed
+        const parentElement = breakElement.parentElement;
+        if (parentElement && parentElement !== mainContent) {
+          // If the break element is nested, we may need to adjust its container
+          parentElement.style.pageBreakInside = 'avoid';
+        }
+        
+        // Handle special case for table rows
+        if (breakElement.tagName === 'TR' || breakElement.closest('tr')) {
+          const row = breakElement.tagName === 'TR' ? breakElement : breakElement.closest('tr');
+          const table = row.closest('table');
+          if (table) {
+            // Place the break before the whole table if it's crossing the threshold
+            table.style.pageBreakBefore = 'always';
+            table.style.marginTop = '300px';
+            breakElement.style.marginTop = '0'; // Reset element margin
+          }
+        }
+      }
+      
+      // Ensure table rows don't break across pages
+      const tableRows = document.querySelectorAll('tr');
+      tableRows.forEach(row => {
+        row.style.pageBreakInside = 'avoid';
+      });
+    }
+    
+    // Run when DOM is loaded
+    document.addEventListener('DOMContentLoaded', insertPageBreaks);
+    
+    // Also run right before printing
+    window.addEventListener('beforeprint', insertPageBreaks);
+  `;
+};
+
+// Update the printPrescription function to include our overflow handler
 export const printPrescription = (patient: Patient, prescription: Prescription, config?: PrintConfig) => {
-  const html = generatePrescriptionHTML(patient, prescription, config)
+  const html = generatePrescriptionHTML(patient, prescription, config);
 
   // Create a new window
-  const printWindow = window.open("", "_blank")
+  const printWindow = window.open("", "_blank");
   if (!printWindow) {
-    alert("Please allow popups for this site to print prescriptions")
-    return
+    alert("Please allow popups for this site to print prescriptions");
+    return;
   }
 
   // Write HTML content
-  printWindow.document.write(html)
-  printWindow.document.close()
+  printWindow.document.write(html);
+  
+  // Add the overflow detection script to the head
+  const overflowScript = document.createElement('script');
+  overflowScript.textContent = handlePageOverflow();
+  printWindow.document.head.appendChild(overflowScript);
+  
+  printWindow.document.close();
 
   // Wait for content to load
   printWindow.onload = () => {
     // Trigger print
-    printWindow.focus()
-    printWindow.print()
-  }
-}
+    printWindow.focus();
+    printWindow.print();
+  };
+};
 
