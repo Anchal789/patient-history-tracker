@@ -37,9 +37,9 @@ export function PrescriptionPrint({ patient, prescription }: PrescriptionPrintPr
           <Printer className="mr-2 h-4 w-4" />
           Print
         </Button>
-        <Button variant="ghost" size="sm" onClick={() => setShowConfigDialog(true)} className="flex items-center">
+        {/* <Button variant="ghost" size="sm" onClick={() => setShowConfigDialog(true)} className="flex items-center">
           Configure
-        </Button>
+        </Button> */}
       </div>
 
       <Dialog open={showConfigDialog} onOpenChange={setShowConfigDialog}>
