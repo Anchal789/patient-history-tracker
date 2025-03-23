@@ -1,6 +1,6 @@
-import { DiagnosisForm } from "@/components/diagnosis-form"
+import { DiagnosesList } from "@/components/diagnoses-list"
 
 export default function NewDiagnosisPage() {
-  return <DiagnosisForm />
+  return <DiagnosesList />
 }
 

@@ -123,7 +123,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </Sheet>
 
           <div className="flex-1">
-            <h1 className="text-lg font-semibold">Doctor's Patient Management</h1>
+            <h1 className="text-lg font-semibold">Rakshanam Health Care</h1>
           </div>
         </header>
 
