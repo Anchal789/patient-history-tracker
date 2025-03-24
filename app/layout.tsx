@@ -9,7 +9,7 @@ import { Toaster } from "@/components/toaster"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Doctor's Patient Management System",
+  title: "Rakshanam Health Care",
   description: "Track patient medical history and prescriptions",
     generator: 'v0.dev'
 }
