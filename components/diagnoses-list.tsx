@@ -121,7 +121,18 @@ export function DiagnosesList() {
       setDiseaseName(diagnosis.diseaseName);
       setDiagnosisText(diagnosis.diagnosisText);
       setSpecialAdvice(diagnosis.specialAdvice || "");
-      setMedicines([...diagnosis.medicines]);
+      setMedicines(
+        Array.isArray(diagnosis.medicines)
+          ? [...diagnosis.medicines]
+          : [
+              {
+                name: "",
+                type: "Tablet",
+                dosage: [],
+                duration: { days: 0, months: 0, years: 0 },
+              },
+            ]
+      );
     } else {
       setSelectedDiagnosis(null);
       setDiseaseName("");
