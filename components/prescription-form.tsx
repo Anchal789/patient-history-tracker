@@ -40,7 +40,24 @@ import { PrescriptionPrint } from "@/components/prescription-print";
 import { getAllMedicines } from "@/lib/realtime-database-service-medicines";
 import { getAllDiagnoses } from "@/lib/realtime-database-service-diagnoses";
 import type { SavedMedicine, CommonDiagnosis } from "@/lib/types";
-import TemplateImage from "../assets/Template.jpg"
+import TemplateImage from "../assets/Template.jpg";
+
+// Add a new import for the Command component
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface PrescriptionFormProps {
   patientId: string;
@@ -121,7 +138,9 @@ export function PrescriptionForm({
             name: savedMedicine.name,
             type: savedMedicine.type,
             dosage: [...savedMedicine.defaultDosage],
-            duration: { ...savedMedicine.defaultDuration },
+            duration: savedMedicine.defaultDuration
+              ? savedMedicine.defaultDuration
+              : { days: 0, months: 0, years: 0 }, // Ensure a default duration if not provided
           };
         }
         return medicine;
@@ -553,9 +572,7 @@ export function PrescriptionForm({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="afebrileTemperature">
-                  Afebrile Temp
-                </Label>
+                <Label htmlFor="afebrileTemperature">Afebrile Temp</Label>
                 <Input
                   id="afebrileTemperature"
                   type="checkbox"
@@ -665,27 +682,52 @@ export function PrescriptionForm({
                     {/* Add the saved medicine selector before the medicine name/type fields */}
                     <div className="space-y-2 mb-4">
                       <Label htmlFor={`medicine-${index}-saved`}>
-                        Select Saved Medicine
+                        Search Medicine
                       </Label>
-                      <Select
-                        onValueChange={(value) =>
-                          handleSelectSavedMedicine(index, value)
-                        }
-                      >
-                        <SelectTrigger id={`medicine-${index}-saved`}>
-                          <SelectValue placeholder="Select a medicine" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {savedMedicines.map((savedMedicine) => (
-                            <SelectItem
-                              key={savedMedicine.id}
-                              value={savedMedicine.id}
-                            >
-                              {savedMedicine.name} ({savedMedicine.type})
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className="w-full justify-between"
+                          >
+                            {medicine.name || "Search for medicine..."}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-full p-0">
+                          <Command>
+                            <CommandInput placeholder="Search medicine..." />
+                            <CommandList>
+                              <CommandEmpty>No medicine found.</CommandEmpty>
+                              <CommandGroup>
+                                {savedMedicines.map((savedMedicine) => (
+                                  <CommandItem
+                                    key={savedMedicine.id}
+                                    value={savedMedicine.name}
+                                    onSelect={() => {
+                                      handleSelectSavedMedicine(
+                                        index,
+                                        savedMedicine.id
+                                      );
+                                    }}
+                                  >
+                                    <Check
+                                      className={cn(
+                                        "mr-2 h-4 w-4",
+                                        medicine.name === savedMedicine.name
+                                          ? "opacity-100"
+                                          : "opacity-0"
+                                      )}
+                                    />
+                                    {savedMedicine.name} ({savedMedicine.type})
+                                  </CommandItem>
+                                ))}
+                              </CommandGroup>
+                            </CommandList>
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

@@ -68,9 +68,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="flex min-h-screen bg-background">
-      {/* Desktop Sidebar */}
-      <aside className="hidden md:flex md:w-64 flex-col border-r bg-card">
-        <div className="flex h-14 items-center border-b px-6 sticky top-0 bg-background ">
+      {/* Desktop Sidebar - Make it fixed */}
+      <aside className="hidden md:flex md:w-64 flex-col border-r bg-card fixed h-screen z-10">
+        <div className="flex h-14 items-center border-b px-6">
           <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
             <User2 className="h-5 w-5 text-primary" />
             <span>PatTracker</span>
@@ -79,7 +79,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <div className="flex-1 overflow-auto p-4 space-y-2">
           <NavItems />
         </div>
-        <div className="border-t p-4 sticky bottom-0">
+        <div className="border-t p-4">
           <div className="flex items-center gap-2">
             <User2 className="h-8 w-8 rounded-full bg-primary/10 p-2 text-primary" />
             <div>
@@ -90,9 +90,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
 
+      {/* Add a spacer div to offset the fixed sidebar */}
+      <div className="hidden md:block md:w-64"></div>
+
       <div className="flex-1 flex flex-col">
-        {/* Mobile Header */}
-        <header className="flex h-14 items-center gap-4 border-b bg-card px-4 md:px-6 sticky top-0 z-50">
+        {/* Mobile Header - Make it sticky */}
+        <header className="flex h-14 items-center gap-4 border-b bg-card px-4 md:px-6 sticky top-0 z-10">
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="md:hidden">

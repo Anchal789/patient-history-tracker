@@ -10,12 +10,29 @@ import { Plus, Search } from "lucide-react"
 import type { Patient } from "@/lib/types"
 import { getAllPatients } from "@/lib/realtime-database-service"
 import { Skeleton } from "@/components/ui/skeleton"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+import { Trash2 } from "lucide-react"
+import { deletePatient } from "@/lib/realtime-database-service"
+import { toast } from "@/components/ui/use-toast"
+import { Loader2 } from "lucide-react"
 
 export function PatientsList() {
   const router = useRouter()
   const [patients, setPatients] = useState<Patient[]>([])
   const [searchQuery, setSearchQuery] = useState("")
   const [isLoading, setIsLoading] = useState(true)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [patientToDelete, setPatientToDelete] = useState<Patient | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -34,6 +51,32 @@ export function PatientsList() {
   }, [])
 
   const filteredPatients = patients.filter((patient) => patient.name.toLowerCase().includes(searchQuery.toLowerCase()))
+
+  const handleDeletePatient = async () => {
+    if (!patientToDelete) return
+
+    setIsDeleting(true)
+    try {
+      await deletePatient(patientToDelete.id)
+      toast({
+        title: "Success",
+        description: "Patient deleted successfully",
+      })
+      // Update the patients list
+      setPatients(patients.filter((p) => p.id !== patientToDelete.id))
+    } catch (error) {
+      console.error("Error deleting patient:", error)
+      toast({
+        title: "Error",
+        description: "Failed to delete patient",
+        variant: "destructive",
+      })
+    } finally {
+      setIsDeleting(false)
+      setIsDeleteDialogOpen(false)
+      setPatientToDelete(null)
+    }
+  }
 
   return (
     <div className="container mx-auto py-6 px-4 sm:px-6 space-y-4">
@@ -75,6 +118,7 @@ export function PatientsList() {
                 <TableHead>Gender</TableHead>
                 <TableHead className="hidden md:table-cell">Last Visit</TableHead>
                 <TableHead className="hidden md:table-cell">Total Visits</TableHead>
+                <TableHead className="w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -97,6 +141,21 @@ export function PatientsList() {
                       {lastVisitDate ? lastVisitDate.toLocaleDateString() : "No visits"}
                     </TableCell>
                     <TableCell className="hidden md:table-cell">{patient.prescriptions?.length || 0}</TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          setPatientToDelete(patient)
+                          setIsDeleteDialogOpen(true)
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4 text-destructive" />
+                        <span className="sr-only">Delete</span>
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 )
               })}
@@ -113,6 +172,34 @@ export function PatientsList() {
           )}
         </div>
       )}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete {patientToDelete?.name}'s record and all associated prescriptions. This
+              action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDeletePatient}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                "Delete"
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

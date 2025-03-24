@@ -340,7 +340,7 @@ export const generatePrescriptionHTML = (
           margin-left : 9px;
         }
         .vitals {
-          margin-top: 671px;
+          margin-top: 630px;
           gap: 17px;
           text-align: end;
           display : flex;
@@ -348,7 +348,7 @@ export const generatePrescriptionHTML = (
           font-size: large;
         }
         .mainContent{
-          margin-top : 220px;
+          margin-top : 210px;
           max-height: calc(100vh - 190px); /* Viewport height minus margins and header */
 page-break-inside: auto;
           /* Ensure the entire letterhead starts on a new page if needed */
@@ -483,10 +483,6 @@ page-break-inside: auto;
             <p>${prescription.chiefComplaints || "None specified"}</p>
           </div>
           
-          <div class="exam-notes">
-            <div class="section-title">EXAMINATION NOTES:</div>
-            <ul>${examItems || "<li>None</li>"}</ul>
-          </div>
           
           <div class="diagnosis">
             <div class="section-title">DIAGNOSIS:</div>

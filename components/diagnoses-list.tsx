@@ -436,7 +436,7 @@ export function DiagnosesList() {
                             Medicines:
                           </h4>
                           <div className="space-y-2">
-                            {diagnosis.medicines.map((medicine, index) => (
+                            {(diagnosis.medicines || []).map((medicine, index) => (
                               <div
                                 key={index}
                                 className="border rounded-md p-2"
