@@ -76,7 +76,7 @@ export function DashboardView() {
     }
 
     const query = searchQuery.toLowerCase()
-    const results = patients.filter((patient) => patient.name.toLowerCase().includes(query))
+    const results = patients?.filter((patient) => patient.name.toLowerCase().includes(query))
     setSearchResults(results)
   }, [searchQuery, patients])
 
@@ -184,9 +184,9 @@ export function DashboardView() {
             {isLoading ? (
               Array(5)
                 .fill(0)
-                .map((_, i) => <Skeleton key={i} className="h-20 w-full" />)
+                ?.map((_, i) => <Skeleton key={i} className="h-20 w-full" />)
             ) : patients.length > 0 ? (
-              patients.map((patient) => (
+              patients?.map((patient) => (
                 <Card key={patient.id} className="hover:bg-accent transition-colors">
                   <CardContent className="p-4">
                     <Link href={`/patients/${patient.id}`}>
@@ -224,9 +224,9 @@ export function DashboardView() {
             {isLoading ? (
               Array(3)
                 .fill(0)
-                .map((_, i) => <Skeleton key={i} className="h-24 w-full" />)
+                ?.map((_, i) => <Skeleton key={i} className="h-24 w-full" />)
             ) : followUps.length > 0 ? (
-              followUps.map(({ patient, prescription }) => (
+              followUps?.map(({ patient, prescription }) => (
                 <Card key={`${patient.id}-${prescription.id}`} className="hover:bg-accent transition-colors">
                   <CardContent className="p-4">
                     <Link href={`/patients/${patient.id}`}>
@@ -273,9 +273,9 @@ export function DashboardView() {
             {isLoading ? (
               Array(3)
                 .fill(0)
-                .map((_, i) => <Skeleton key={i} className="h-24 w-full" />)
+                ?.map((_, i) => <Skeleton key={i} className="h-24 w-full" />)
             ) : recentVisits.length > 0 ? (
-              recentVisits.map(({ patient, prescription }) => (
+              recentVisits?.map(({ patient, prescription }) => (
                 <Card key={`${patient.id}-${prescription.id}`} className="hover:bg-accent transition-colors">
                   <CardContent className="p-4">
                     <Link href={`/patients/${patient.id}`}>

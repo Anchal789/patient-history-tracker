@@ -15,7 +15,7 @@ export function PatientSearchResults({ results }: PatientSearchResultsProps) {
 
   return (
     <div className="space-y-2">
-      {results.map((patient) => (
+      {results?.map((patient) => (
         <Link href={`/patients/${patient.id}`} key={patient.id}>
           <Card className="hover:bg-accent transition-colors">
             <CardContent className="p-3">

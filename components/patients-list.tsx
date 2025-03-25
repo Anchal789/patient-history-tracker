@@ -50,7 +50,7 @@ export function PatientsList() {
     fetchPatients()
   }, [])
 
-  const filteredPatients = patients.filter((patient) => patient.name.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredPatients = patients?.filter((patient) => patient.name.toLowerCase().includes(searchQuery.toLowerCase()))
 
   const handleDeletePatient = async () => {
     if (!patientToDelete) return
@@ -63,7 +63,7 @@ export function PatientsList() {
         description: "Patient deleted successfully",
       })
       // Update the patients list
-      setPatients(patients.filter((p) => p.id !== patientToDelete.id))
+      setPatients(patients?.filter((p) => p.id !== patientToDelete.id))
     } catch (error) {
       console.error("Error deleting patient:", error)
       toast({
@@ -104,7 +104,7 @@ export function PatientsList() {
           <Skeleton className="h-10 w-full" />
           {Array(5)
             .fill(0)
-            .map((_, i) => (
+            ?.map((_, i) => (
               <Skeleton key={i} className="h-16 w-full" />
             ))}
         </div>
@@ -122,7 +122,7 @@ export function PatientsList() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredPatients.map((patient) => {
+              {filteredPatients?.map((patient) => {
                 const lastVisitDate =
                   patient.prescriptions && patient.prescriptions.length > 0
                     ? new Date(patient.prescriptions[0].date)

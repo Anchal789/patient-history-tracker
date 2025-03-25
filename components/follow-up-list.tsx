@@ -62,7 +62,7 @@ export function FollowUpList() {
 
       // Update local state
       setFollowUps((prevFollowUps) =>
-        prevFollowUps.map((item) => {
+        prevFollowUps?.map((item) => {
           if (item.prescription.id === selectedFollowUp.prescriptionId) {
             return {
               ...item,
@@ -94,7 +94,7 @@ export function FollowUpList() {
 
       // Update local state
       setFollowUps((prevFollowUps) =>
-        prevFollowUps.filter((item) => item.prescription.id !== selectedFollowUp.prescriptionId),
+        prevFollowUps?.filter((item) => item.prescription.id !== selectedFollowUp.prescriptionId),
       )
 
       setIsRescheduleOpen(false)
@@ -109,7 +109,7 @@ export function FollowUpList() {
       <div className="space-y-3">
         {Array(3)
           .fill(0)
-          .map((_, i) => (
+          ?.map((_, i) => (
             <Skeleton key={i} className="h-20 w-full" />
           ))}
       </div>
@@ -122,7 +122,7 @@ export function FollowUpList() {
 
   return (
     <div className="space-y-3">
-      {followUps.map(({ patient, prescription }) => (
+      {followUps?.map(({ patient, prescription }) => (
         <Card key={`${patient.id}-${prescription.id}`}>
           <CardContent className="p-4">
             <div className="flex justify-between items-center">

@@ -128,11 +128,11 @@ export function PrescriptionForm({
     medicineIndex: number,
     savedMedicineId: string
   ) => {
-    const savedMedicine = savedMedicines.find((m) => m.id === savedMedicineId);
+    const savedMedicine = savedMedicines?.find((m) => m.id === savedMedicineId);
     if (!savedMedicine) return;
 
     setMedicines(
-      medicines.map((medicine, i) => {
+      medicines?.map((medicine, i) => {
         if (i === medicineIndex) {
           return {
             name: savedMedicine.name,
@@ -150,7 +150,7 @@ export function PrescriptionForm({
 
   // Add a function to handle selecting a diagnosis
   const handleSelectDiagnosis = (diagnosisId: string) => {
-    const selectedDiagnosis = diagnoses.find((d) => d.id === diagnosisId);
+    const selectedDiagnosis = diagnoses?.find((d) => d.id === diagnosisId);
     if (!selectedDiagnosis) return;
 
     setDiagnosis(selectedDiagnosis.diagnosisText);
@@ -195,7 +195,7 @@ export function PrescriptionForm({
 
         // If editing an existing prescription
         if (prescriptionId && patientData.prescriptions) {
-          const prescription = patientData.prescriptions.find(
+          const prescription = patientData.prescriptions?.find(
             (p) => p.id === prescriptionId
           );
           if (prescription) {
@@ -294,7 +294,7 @@ export function PrescriptionForm({
   };
 
   const handleRemoveMedicine = (index: number) => {
-    setMedicines(medicines.filter((_, i) => i !== index));
+    setMedicines(medicines?.filter((_, i) => i !== index));
   };
 
   const handleMedicineChange = (
@@ -303,7 +303,7 @@ export function PrescriptionForm({
     value: any
   ) => {
     setMedicines(
-      medicines.map((medicine, i) => {
+      medicines?.map((medicine, i) => {
         if (i === index) {
           return { ...medicine, [field]: value };
         }
@@ -318,7 +318,7 @@ export function PrescriptionForm({
     value: number
   ) => {
     setMedicines(
-      medicines.map((medicine, i) => {
+      medicines?.map((medicine, i) => {
         if (i === index) {
           return {
             ...medicine,
@@ -339,7 +339,7 @@ export function PrescriptionForm({
     checked: boolean
   ) => {
     setMedicines(
-      medicines.map((medicine, i) => {
+      medicines?.map((medicine, i) => {
         if (i === medicineIndex) {
           let newDosage = [...medicine.dosage];
 
@@ -352,7 +352,7 @@ export function PrescriptionForm({
             });
           } else {
             // Remove dosage
-            newDosage = newDosage.filter((d) => d.time !== timing);
+            newDosage = newDosage?.filter((d) => d.time !== timing);
           }
 
           return { ...medicine, dosage: newDosage };
@@ -369,9 +369,9 @@ export function PrescriptionForm({
     value: string
   ) => {
     setMedicines(
-      medicines.map((medicine, i) => {
+      medicines?.map((medicine, i) => {
         if (i === medicineIndex) {
-          const newDosage = medicine.dosage.map((d) => {
+          const newDosage = medicine.dosage?.map((d) => {
             if (d.time === timing) {
               return { ...d, [field]: value };
             }
@@ -535,7 +535,7 @@ export function PrescriptionForm({
                   <SelectValue placeholder="Select a diagnosis" />
                 </SelectTrigger>
                 <SelectContent>
-                  {diagnoses.map((diagnosis) => (
+                  {diagnoses?.map((diagnosis) => (
                     <SelectItem key={diagnosis.id} value={diagnosis.id}>
                       {diagnosis.diseaseName}
                     </SelectItem>
@@ -662,7 +662,7 @@ export function PrescriptionForm({
                 <p className="text-sm text-destructive">{errors.medicines}</p>
               )}
 
-              {medicines.map((medicine, index) => (
+              {medicines?.map((medicine, index) => (
                 <Card key={index} className="border border-muted">
                   <CardContent className="p-4 space-y-4">
                     <div className="flex justify-between items-start">
@@ -701,7 +701,7 @@ export function PrescriptionForm({
                             <CommandList>
                               <CommandEmpty>No medicine found.</CommandEmpty>
                               <CommandGroup>
-                                {savedMedicines.map((savedMedicine) => (
+                                {savedMedicines?.map((savedMedicine) => (
                                   <CommandItem
                                     key={savedMedicine.id}
                                     value={savedMedicine.name}
@@ -767,7 +767,7 @@ export function PrescriptionForm({
                             <SelectValue placeholder="Select type" />
                           </SelectTrigger>
                           <SelectContent>
-                            {medicineTypes.map((type) => (
+                            {medicineTypes?.map((type) => (
                               <SelectItem key={type} value={type}>
                                 {type}
                               </SelectItem>
@@ -788,11 +788,11 @@ export function PrescriptionForm({
                       )}
 
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                        {timings.map((timing) => {
-                          const isChecked = medicine.dosage.some(
+                        {timings?.map((timing) => {
+                          const isChecked = medicine?.dosage?.some(
                             (d) => d.time === timing
                           );
-                          const dosage = medicine.dosage.find(
+                          const dosage = medicine.dosage?.find(
                             (d) => d.time === timing
                           );
 

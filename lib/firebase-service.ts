@@ -36,7 +36,7 @@ export const getAllPatients = async (): Promise<Patient[]> => {
     )
 
     const prescriptionsSnapshot = await getDocs(prescriptionsQuery)
-    const prescriptions = prescriptionsSnapshot.docs.map((prescDoc) => ({
+    const prescriptions = prescriptionsSnapshot.docs?.map((prescDoc) => ({
       id: prescDoc.id,
       ...prescDoc.data(),
       date: prescDoc.data().date.toDate().toISOString(),
@@ -71,7 +71,7 @@ export const getPatientById = async (id: string): Promise<Patient | null> => {
   )
 
   const prescriptionsSnapshot = await getDocs(prescriptionsQuery)
-  const prescriptions = prescriptionsSnapshot.docs.map((prescDoc) => ({
+  const prescriptions = prescriptionsSnapshot.docs?.map((prescDoc) => ({
     id: prescDoc.id,
     ...prescDoc.data(),
     date: prescDoc.data().date.toDate().toISOString(),
@@ -116,7 +116,7 @@ export const deletePatient = async (id: string): Promise<void> => {
   const prescriptionsQuery = query(collection(db, PRESCRIPTIONS_COLLECTION), where("patientId", "==", id))
 
   const prescriptionsSnapshot = await getDocs(prescriptionsQuery)
-  const deletePromises = prescriptionsSnapshot.docs.map((prescDoc) =>
+  const deletePromises = prescriptionsSnapshot.docs?.map((prescDoc) =>
     deleteDoc(doc(db, PRESCRIPTIONS_COLLECTION, prescDoc.id)),
   )
 

@@ -67,12 +67,12 @@ export function DiagnosisForm({ diagnosis, onSuccess, onCancel }: DiagnosisFormP
   }
 
   const handleRemoveMedicine = (index: number) => {
-    setMedicines(medicines.filter((_, i) => i !== index))
+    setMedicines(medicines?.filter((_, i) => i !== index))
   }
 
   const handleMedicineChange = (index: number, field: keyof Medicine, value: any) => {
     setMedicines(
-      medicines.map((medicine, i) => {
+      medicines?.map((medicine, i) => {
         if (i === index) {
           return { ...medicine, [field]: value }
         }
@@ -83,7 +83,7 @@ export function DiagnosisForm({ diagnosis, onSuccess, onCancel }: DiagnosisFormP
 
   const handleDurationChange = (index: number, field: keyof Medicine["duration"], value: number) => {
     setMedicines(
-      medicines.map((medicine, i) => {
+      medicines?.map((medicine, i) => {
         if (i === index) {
           return {
             ...medicine,
@@ -100,7 +100,7 @@ export function DiagnosisForm({ diagnosis, onSuccess, onCancel }: DiagnosisFormP
 
   const handleDosageChange = (medicineIndex: number, timing: string, checked: boolean) => {
     setMedicines(
-      medicines.map((medicine, i) => {
+      medicines?.map((medicine, i) => {
         if (i === medicineIndex) {
           let newDosage = [...medicine.dosage]
 
@@ -113,7 +113,7 @@ export function DiagnosisForm({ diagnosis, onSuccess, onCancel }: DiagnosisFormP
             })
           } else {
             // Remove dosage
-            newDosage = newDosage.filter((d) => d.time !== timing)
+            newDosage = newDosage?.filter((d) => d.time !== timing)
           }
 
           return { ...medicine, dosage: newDosage }
@@ -125,9 +125,9 @@ export function DiagnosisForm({ diagnosis, onSuccess, onCancel }: DiagnosisFormP
 
   const handleDosageDetailChange = (medicineIndex: number, timing: string, field: keyof Dosage, value: string) => {
     setMedicines(
-      medicines.map((medicine, i) => {
+      medicines?.map((medicine, i) => {
         if (i === medicineIndex) {
-          const newDosage = medicine.dosage.map((d) => {
+          const newDosage = medicine.dosage?.map((d) => {
             if (d.time === timing) {
               return { ...d, [field]: value }
             }
@@ -142,11 +142,11 @@ export function DiagnosisForm({ diagnosis, onSuccess, onCancel }: DiagnosisFormP
   }
 
   const handleSelectSavedMedicine = (medicineIndex: number, savedMedicineId: string) => {
-    const savedMedicine = savedMedicines.find((m) => m.id === savedMedicineId)
+    const savedMedicine = savedMedicines?.find((m) => m.id === savedMedicineId)
     if (!savedMedicine) return
 
     setMedicines(
-      medicines.map((medicine, i) => {
+      medicines?.map((medicine, i) => {
         if (i === medicineIndex) {
           return {
             name: savedMedicine.name,
@@ -281,7 +281,7 @@ export function DiagnosisForm({ diagnosis, onSuccess, onCancel }: DiagnosisFormP
             </div>
           ) : (
             <div className="space-y-4">
-              {medicines.map((medicine, index) => (
+              {medicines?.map((medicine, index) => (
                 <Card key={index} className="p-4">
                   <div className="flex justify-between items-start mb-4">
                     <h4 className="font-medium">Medicine {index + 1}</h4>
@@ -299,7 +299,7 @@ export function DiagnosisForm({ diagnosis, onSuccess, onCancel }: DiagnosisFormP
                             <SelectValue placeholder="Select a medicine" />
                           </SelectTrigger>
                           <SelectContent>
-                            {savedMedicines.map((savedMedicine) => (
+                            {savedMedicines?.map((savedMedicine) => (
                               <SelectItem key={savedMedicine.id} value={savedMedicine.id}>
                                 {savedMedicine.name} ({savedMedicine.type})
                               </SelectItem>
@@ -330,7 +330,7 @@ export function DiagnosisForm({ diagnosis, onSuccess, onCancel }: DiagnosisFormP
                             <SelectValue placeholder="Select type" />
                           </SelectTrigger>
                           <SelectContent>
-                            {medicineTypes.map((type) => (
+                            {medicineTypes?.map((type) => (
                               <SelectItem key={type} value={type}>
                                 {type}
                               </SelectItem>
@@ -343,9 +343,9 @@ export function DiagnosisForm({ diagnosis, onSuccess, onCancel }: DiagnosisFormP
                     <div className="space-y-2">
                       <Label>Dosage</Label>
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                        {timings.map((timing) => {
-                          const isChecked = medicine.dosage.some((d) => d.time === timing)
-                          const dosage = medicine.dosage.find((d) => d.time === timing)
+                        {timings?.map((timing) => {
+                          const isChecked = medicine.dosage?.some((d) => d.time === timing)
+                          const dosage = medicine.dosage?.find((d) => d.time === timing)
 
                           return (
                             <div key={timing} className="space-y-2">

@@ -87,13 +87,13 @@ export function MedicineForm({ medicineId }: MedicineFormProps) {
       ])
     } else {
       // Remove dosage
-      setDosages(dosages.filter((d) => d.time !== timing))
+      setDosages(dosages?.filter((d) => d.time !== timing))
     }
   }
 
   const handleDosageDetailChange = (timing: string, field: keyof Dosage, value: string) => {
     setDosages(
-      dosages.map((d) => {
+      dosages?.map((d) => {
         if (d.time === timing) {
           return { ...d, [field]: value }
         }
@@ -228,7 +228,7 @@ export function MedicineForm({ medicineId }: MedicineFormProps) {
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
-                    {medicineTypes.map((type) => (
+                    {medicineTypes?.map((type) => (
                       <SelectItem key={type} value={type}>
                         {type}
                       </SelectItem>
@@ -241,9 +241,9 @@ export function MedicineForm({ medicineId }: MedicineFormProps) {
             <div className="space-y-4">
               <Label>Dosage Schedule</Label>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                {timings.map((timing) => {
-                  const isChecked = dosages.some((d) => d.time === timing)
-                  const dosage = dosages.find((d) => d.time === timing)
+                {timings?.map((timing) => {
+                  const isChecked = dosages?.some((d) => d.time === timing)
+                  const dosage = dosages?.find((d) => d.time === timing)
 
                   return (
                     <div key={timing} className="space-y-4 border rounded-md p-4">
@@ -284,7 +284,7 @@ export function MedicineForm({ medicineId }: MedicineFormProps) {
                                 <SelectValue placeholder="Select" />
                               </SelectTrigger>
                               <SelectContent>
-                                {instructions.map((instruction) => (
+                                {instructions?.map((instruction) => (
                                   <SelectItem key={instruction} value={instruction}>
                                     {instruction}
                                   </SelectItem>

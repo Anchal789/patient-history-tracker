@@ -73,7 +73,7 @@ export function MedicinesList() {
     }
   }
 
-  const filteredMedicines = medicines.filter((medicine) =>
+  const filteredMedicines = medicines?.filter((medicine) =>
     medicine.name.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
@@ -116,13 +116,13 @@ export function MedicinesList() {
       ])
     } else {
       // Remove dosage
-      setDosages(dosages.filter((d) => d.time !== timing))
+      setDosages(dosages?.filter((d) => d.time !== timing))
     }
   }
 
   const handleDosageDetailChange = (timing: string, field: keyof Dosage, value: string) => {
     setDosages(
-      dosages.map((d) => {
+      dosages?.map((d) => {
         if (d.time === timing) {
           return { ...d, [field]: value }
         }
@@ -258,7 +258,7 @@ export function MedicinesList() {
           <Skeleton className="h-10 w-full" />
           {Array(5)
             .fill(0)
-            .map((_, i) => (
+            ?.map((_, i) => (
               <Skeleton key={i} className="h-16 w-full" />
             ))}
         </div>
@@ -276,12 +276,12 @@ export function MedicinesList() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {filteredMedicines.map((medicine) => (
+                {filteredMedicines?.map((medicine) => (
                   <TableRow key={medicine.id}>
                     <TableCell className="font-medium">{medicine.name}</TableCell>
                     <TableCell>{medicine.type}</TableCell>
                     <TableCell className="hidden md:table-cell">
-                      {medicine.defaultDosage.map((d) => `${d.time}: ${d.quantity}`).join(", ")}
+                      {medicine.defaultDosage?.map((d) => `${d.time}: ${d.quantity}`).join(", ")}
                     </TableCell>
                     <TableCell className="hidden md:table-cell">
                       {medicine.defaultDuration.days > 0 && `${medicine.defaultDuration.days} days `}
@@ -347,7 +347,7 @@ export function MedicinesList() {
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {medicineTypes.map((type) => (
+                  {medicineTypes?.map((type) => (
                     <SelectItem key={type} value={type}>
                       {type}
                     </SelectItem>
@@ -360,9 +360,9 @@ export function MedicinesList() {
               <Label className="text-right pt-2">Dosage</Label>
               <div className="col-span-3 space-y-4">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                  {timings.map((timing) => {
-                    const isChecked = dosages.some((d) => d.time === timing)
-                    const dosage = dosages.find((d) => d.time === timing)
+                  {timings?.map((timing) => {
+                    const isChecked = dosages?.some((d) => d.time === timing)
+                    const dosage = dosages?.find((d) => d.time === timing)
 
                     return (
                       <div key={timing} className="space-y-2">

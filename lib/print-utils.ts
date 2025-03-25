@@ -31,7 +31,7 @@ export const formatDosageInstruction = (medicine: Medicine): ReactNode => {
 //     timingMap[d.time] = d.quantity
 //   })
 //   // Create a string like "1-0-1" for morning-afternoon-evening
-//   const pattern = ["Morning", "Afternoon", "Evening", "Night"].map((time) => timingMap[time] || "0").join("-")
+//   const pattern = ["Morning", "Afternoon", "Evening", "Night"]?.map((time) => timingMap[time] || "0").join("-")
 
 //   // Get the instruction from the first dosage (assuming all have same instructions)
 //   const instruction = medicine.dosage.length > 0 ? medicine.dosage[0].instructions : ""
@@ -48,7 +48,7 @@ export const formatDosageInstruction = (medicine: Medicine): ReactNode => {
     durationText =  durationText + ` ${medicine.duration.years} वर्ष`
   }
 
-  return `<div class="medicineQuantity">${medicine.dosage.length > 0 ? medicine.dosage.map((item)=> `<p>${item.quantity} - ${item.instructions}</p>`).join("") : ""}<br/>${durationText}</div>`
+  return `<div class="medicineQuantity">${medicine.dosage.length > 0 ? medicine.dosage?.map((item)=> `<p>${item.quantity} - ${item.instructions}</p>`).join("") : ""}<br/>${durationText}</div>`
 }
 
 // Function to generate prescription print HTML
@@ -63,7 +63,7 @@ export const generatePrescriptionHTML = (
   const adviceItems = prescription.specialAdvice
     ? prescription.specialAdvice
         .split("\n")
-        .map((line) => `<li>${line}</li>`)
+        ?.map((line) => `<li>${line}</li>`)
         .join("")
     : ""
 
@@ -71,13 +71,13 @@ export const generatePrescriptionHTML = (
   const examItems = prescription.examNotes
     ? prescription.examNotes
         .split("\n")
-        .map((line) => `<li>${line}</li>`)
+        ?.map((line) => `<li>${line}</li>`)
         .join("")
     : ""
 
   // Format medicines as table rows
   const medicineRows = prescription.medicines
-    .map(
+    ?.map(
       (med, index) => `
     <tr>
       <td>${index + 1}</td>

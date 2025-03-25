@@ -82,7 +82,7 @@ export function PrescriptionView({ prescription }: PrescriptionViewProps) {
       <div>
         <h3 className="text-lg font-medium">Medications</h3>
         <div className="mt-2 space-y-4">
-          {prescription.medicines.map((medicine, index) => (
+          {prescription.medicines?.map((medicine, index) => (
             <div key={index} className="border rounded-md p-3">
               <div className="flex justify-between">
                 <h4 className="font-medium">
@@ -93,7 +93,7 @@ export function PrescriptionView({ prescription }: PrescriptionViewProps) {
                 <div>
                   <span className="text-muted-foreground">Dosage:</span>
                   <ul className="list-disc pl-5 mt-1">
-                    {medicine.dosage.map((dose, idx) => (
+                    {medicine.dosage?.map((dose, idx) => (
                       <li key={idx}>
                         {dose.time}: {dose.quantity} {dose.instructions ? `(${dose.instructions})` : ""}
                       </li>

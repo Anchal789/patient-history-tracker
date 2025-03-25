@@ -128,46 +128,38 @@ export const createPatient = async (patient: Omit<Patient, "id" | "prescriptions
   const yy = today.getFullYear().toString().slice(-2);
   const mm = (today.getMonth() + 1).toString().padStart(2, "0");
   const dd = today.getDate().toString().padStart(2, "0");
-
   const datePrefix = `${yy}${mm}${dd}`; // e.g., "250316"
 
-  // Step 1: Get ALL patients
+  // Step 1: Get ALL patients for the day
   const patientsRef = ref(db, "patients");
   const snapshot = await get(patientsRef);
 
-  let numberOfPatientsToday = 0;
+  // Track existing patient IDs for the day
+  const existingPatientIds = new Set<string>();
 
   if (snapshot.exists()) {
     snapshot.forEach((childSnapshot) => {
-      const patientData = childSnapshot.val();
-
-      if (patientData?.createdAt) {
-        const createdAtDate = new Date(patientData.createdAt);
-
-        // Compare the createdAtDate with today's date
-        const isSameDay =
-          createdAtDate.getFullYear() === today.getFullYear() &&
-          createdAtDate.getMonth() === today.getMonth() &&
-          createdAtDate.getDate() === today.getDate();
-
-        if (isSameDay) {
-          numberOfPatientsToday++;
-        }
+      const patientId = childSnapshot.key;
+      if (patientId?.startsWith(datePrefix)) {
+        existingPatientIds.add(patientId);
       }
     });
   }
 
-  // Step 2: Generate the next patient number
-  const nextPatientNumber = numberOfPatientsToday + 1;
-  const paddedPatientNumber = nextPatientNumber.toString().padStart(3, "0");
+  // Step 2: Find the next available patient number
+  let nextPatientNumber = 1;
+  while (existingPatientIds.has(`${datePrefix}${nextPatientNumber.toString().padStart(3, "0")}`)) {
+    nextPatientNumber++;
+  }
 
   // Step 3: Create your custom patient ID
+  const paddedPatientNumber = nextPatientNumber.toString().padStart(3, "0");
   const patientId = `${datePrefix}${paddedPatientNumber}`; // e.g., "250316001"
 
   // Step 4: Save the new patient with this custom ID
   const newPatientRef = ref(db, `patients/${patientId}`);
 
-  // Attach `createdAt` field to patient data (important!)
+  // Attach `createdAt` field to patient data
   const patientDataWithTimestamp = {
     ...patient,
     createdAt: Date.now() // store timestamp for future lookups
@@ -177,24 +169,6 @@ export const createPatient = async (patient: Omit<Patient, "id" | "prescriptions
   await set(newPatientRef, patientDataWithTimestamp);
 
   return patientId;
-
-
-  // const today = new Date()
-  // const yy = today.getFullYear().toString().slice(-2)
-  // const mm = (today.getMonth() + 1).toString().padStart(2, "0")
-  // const dd = today.getDate().toString().padStart(2, "0")
-
-  // const datePrefix = `${yy}${mm}${dd}` // e.g., "250315"
-
-  // const patientNumber = 5
-  // const patientId = `${datePrefix}${patientNumber.toString().padStart(3, "0")}` 
-  // const patientsRef = ref(db, "patients")
-  // const newPatientRef = push(patientsRef)
-  // const patientId = newPatientRef.key as string
-
-  // await set(newPatientRef, createPatientData(patient))
-  //   console.log(newPatientRef, patient)
-  // return patientId
 }
 
 export const updatePatient = async (id: string, patient: Partial<Patient>): Promise<void> => {
@@ -222,8 +196,8 @@ export const deletePatient = async (id: string): Promise<void> => {
 
     // Find and delete prescriptions for this patient
     const deletePromises = Object.entries(prescriptionsData)
-      .filter(([_, prescription]) => (prescription as any).patientId === id)
-      .map(([prescId, _]) => {
+      ?.filter(([_, prescription]) => (prescription as any).patientId === id)
+      ?.map(([prescId, _]) => {
         const prescRef = ref(db, `prescriptions/${prescId}`)
         return remove(prescRef)
       })

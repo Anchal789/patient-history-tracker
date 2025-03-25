@@ -178,7 +178,7 @@ export function PatientDetails({ patientId }: PatientDetailsProps) {
                     <dd className="mt-1">
                       {sortedPrescriptions.length > 0 ? (
                         <ul className="list-disc pl-5 space-y-1">
-                          {sortedPrescriptions[0].medicines.map((med, idx) => (
+                          {sortedPrescriptions[0].medicines?.map((med, idx) => (
                             <li key={idx}>
                               {med.name} ({med.type})
                             </li>
@@ -271,7 +271,7 @@ export function PatientDetails({ patientId }: PatientDetailsProps) {
             <CardContent>
               <div className="space-y-4">
                 {sortedPrescriptions.length > 0 ? (
-                  sortedPrescriptions.map((prescription) => (
+                  sortedPrescriptions?.map((prescription) => (
                     <div
                       key={prescription.id}
                       className="border-b pb-4 last:border-0"
@@ -359,7 +359,7 @@ export function PatientDetails({ patientId }: PatientDetailsProps) {
 
         <TabsContent value="prescriptions" className="space-y-4 mt-4">
           {sortedPrescriptions.length > 0 ? (
-            sortedPrescriptions.map((prescription) => (
+            sortedPrescriptions?.map((prescription) => (
               <Card key={prescription.id} className="shadow-sm">
                 <CardHeader>
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2">

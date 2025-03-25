@@ -111,7 +111,7 @@ export function DiagnosesList() {
     }
   };
 
-  const filteredDiagnoses = diagnoses.filter((diagnosis) =>
+  const filteredDiagnoses = diagnoses?.filter((diagnosis) =>
     diagnosis.diseaseName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -161,7 +161,7 @@ export function DiagnosesList() {
   };
 
   const handleRemoveMedicine = (index: number) => {
-    setMedicines(medicines.filter((_, i) => i !== index));
+    setMedicines(medicines?.filter((_, i) => i !== index));
   };
 
   const handleMedicineChange = (
@@ -170,7 +170,7 @@ export function DiagnosesList() {
     value: any
   ) => {
     setMedicines(
-      medicines.map((medicine, i) => {
+      medicines?.map((medicine, i) => {
         if (i === index) {
           return { ...medicine, [field]: value };
         }
@@ -185,7 +185,7 @@ export function DiagnosesList() {
     value: number
   ) => {
     setMedicines(
-      medicines.map((medicine, i) => {
+      medicines?.map((medicine, i) => {
         if (i === index) {
           return {
             ...medicine,
@@ -206,7 +206,7 @@ export function DiagnosesList() {
     checked: boolean
   ) => {
     setMedicines(
-      medicines.map((medicine, i) => {
+      medicines?.map((medicine, i) => {
         if (i === medicineIndex) {
           let newDosage = [...medicine.dosage];
 
@@ -219,7 +219,7 @@ export function DiagnosesList() {
             });
           } else {
             // Remove dosage
-            newDosage = newDosage.filter((d) => d.time !== timing);
+            newDosage = newDosage?.filter((d) => d.time !== timing);
           }
 
           return { ...medicine, dosage: newDosage };
@@ -236,9 +236,9 @@ export function DiagnosesList() {
     value: string
   ) => {
     setMedicines(
-      medicines.map((medicine, i) => {
+      medicines?.map((medicine, i) => {
         if (i === medicineIndex) {
-          const newDosage = medicine.dosage.map((d) => {
+          const newDosage = medicine.dosage?.map((d) => {
             if (d.time === timing) {
               return { ...d, [field]: value };
             }
@@ -256,11 +256,11 @@ export function DiagnosesList() {
     medicineIndex: number,
     savedMedicineId: string
   ) => {
-    const savedMedicine = savedMedicines.find((m) => m.id === savedMedicineId);
+    const savedMedicine = savedMedicines?.find((m) => m.id === savedMedicineId);
     if (!savedMedicine) return;
 
     setMedicines(
-      medicines.map((medicine, i) => {
+      medicines?.map((medicine, i) => {
         if (i === medicineIndex) {
           return {
             name: savedMedicine.name,
@@ -393,13 +393,13 @@ export function DiagnosesList() {
           <Skeleton className="h-10 w-full" />
           {Array(5)
             .fill(0)
-            .map((_, i) => (
+            ?.map((_, i) => (
               <Skeleton key={i} className="h-16 w-full" />
             ))}
         </div>
       ) : filteredDiagnoses.length > 0 ? (
         <div className="space-y-4">
-          {filteredDiagnoses.map((diagnosis) => (
+          {filteredDiagnoses?.map((diagnosis) => (
             <Card key={diagnosis.id}>
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
@@ -447,7 +447,7 @@ export function DiagnosesList() {
                             Medicines:
                           </h4>
                           <div className="space-y-2">
-                            {(diagnosis.medicines || []).map((medicine, index) => (
+                            {(diagnosis.medicines || [])?.map((medicine, index) => (
                               <div
                                 key={index}
                                 className="border rounded-md p-2"
@@ -463,7 +463,7 @@ export function DiagnosesList() {
                                       Dosage:
                                     </span>
                                     <ul className="list-disc pl-5 mt-1">
-                                      {medicine.dosage.map((dose, idx) => (
+                                      {medicine.dosage?.map((dose, idx) => (
                                         <li key={idx}>
                                           {dose.time}: {dose.quantity}{" "}
                                           {dose.instructions
@@ -580,7 +580,7 @@ export function DiagnosesList() {
               </div>
 
               <div className="col-span-3 space-y-4">
-                {medicines.map((medicine, index) => (
+                {medicines?.map((medicine, index) => (
                   <Card key={index} className="p-4">
                     <div className="flex justify-between items-start mb-4">
                       <h4 className="font-medium">Medicine {index + 1}</h4>
@@ -609,7 +609,7 @@ export function DiagnosesList() {
                               <SelectValue placeholder="Select a medicine" />
                             </SelectTrigger>
                             <SelectContent>
-                              {savedMedicines.map((savedMedicine) => (
+                              {savedMedicines?.map((savedMedicine) => (
                                 <SelectItem
                                   key={savedMedicine.id}
                                   value={savedMedicine.id}
@@ -652,7 +652,7 @@ export function DiagnosesList() {
                               <SelectValue placeholder="Select type" />
                             </SelectTrigger>
                             <SelectContent>
-                              {medicineTypes.map((type) => (
+                              {medicineTypes?.map((type) => (
                                 <SelectItem key={type} value={type}>
                                   {type}
                                 </SelectItem>
@@ -665,11 +665,11 @@ export function DiagnosesList() {
                       <div className="space-y-2">
                         <Label>Dosage</Label>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                          {timings.map((timing) => {
-                            const isChecked = medicine.dosage.some(
+                          {timings?.map((timing) => {
+                            const isChecked = medicine.dosage?.some(
                               (d) => d.time === timing
                             );
-                            const dosage = medicine.dosage.find(
+                            const dosage = medicine.dosage?.find(
                               (d) => d.time === timing
                             );
 
