@@ -105,9 +105,7 @@ export const generatePrescriptionHTML = (
             margin: 0;
             max-width: 800px;
             margin: 0;
-            page-break-inside: auto;
-          /* Ensure the entire letterhead starts on a new page if needed */
-          page-break-before: auto;
+            
           }
           .letterhead {
             height: auto;
@@ -117,18 +115,16 @@ export const generatePrescriptionHTML = (
             max-width: 800px;
             grid-template-columns: 24% 70%;
             grid-gap: 10px;
-            page-break-inside: auto;
-          /* Ensure the entire letterhead starts on a new page if needed */
-          page-break-before: auto;
+           
+            
           }
           .image{
             display: none;
             max-width : 800px;
             position: absolute;
             height: 100vh;
-            page-break-inside: auto;
-          /* Ensure the entire letterhead starts on a new page if needed */
-          page-break-before: auto;
+           
+            
           }
           .header {
             display: flex;
@@ -192,9 +188,6 @@ export const generatePrescriptionHTML = (
             height : 780px;
             max-height: 780px;
             margin-bottom : 190px;
-            page-break-inside: auto;
-          /* Ensure the entire letterhead starts on a new page if needed */
-          page-break-before: auto;
           }
           .chiefComplaints b{
             margin-left: 60px;  
@@ -210,8 +203,7 @@ export const generatePrescriptionHTML = (
           }
           .medicines{
             margin-left: 12px;
-            page-break-after: always;
-            break-after: page;
+    
           }
           .medicineQuantity{
             display: flex;
@@ -282,9 +274,6 @@ export const generatePrescriptionHTML = (
           max-width: 800px;
           grid-template-columns: 24% 70%;
           grid-gap: 10px;
-          page-break-inside: auto;
-          /* Ensure the entire letterhead starts on a new page if needed */
-          page-break-before: auto;
         }
         .image{
            max-width : 800px;
@@ -350,9 +339,7 @@ export const generatePrescriptionHTML = (
         .mainContent{
           margin-top : 210px;
           max-height: calc(100vh - 190px); /* Viewport height minus margins and header */
-page-break-inside: auto;
-          /* Ensure the entire letterhead starts on a new page if needed */
-          page-break-before: auto;        }
+        }
         .chiefComplaints b{
           margin-left: 60px;  
         }
@@ -367,8 +354,7 @@ page-break-inside: auto;
         }
         .medicines{
           margin-left: 12px;
-          page-break-after: always;
-          break-after: page;
+        
         }
         .medicineQuantity{
           display: flex;
