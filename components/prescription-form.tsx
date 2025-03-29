@@ -155,7 +155,7 @@ export function PrescriptionForm({
 
     setDiagnosis(selectedDiagnosis.diagnosisText);
     setSpecialAdvice(selectedDiagnosis.specialAdvice || "");
-    setMedicines([
+   setMedicines([
       ...(selectedDiagnosis.medicines || [
         {
           name: "",
