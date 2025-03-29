@@ -37,18 +37,17 @@ export const formatDosageInstruction = (medicine: Medicine): ReactNode => {
 //   const instruction = medicine.dosage.length > 0 ? medicine.dosage[0].instructions : ""
 
   // Add duration
-  let durationText = ""
-  if (medicine.duration.days > 0) {
-    durationText = `${medicine.duration.days} दिन`
-  } 
-   if (medicine.duration.months > 0) {
-    durationText = durationText + ` ${medicine.duration.months} महीने`
-  } 
-  if (medicine.duration.years > 0) {
-    durationText =  durationText + ` ${medicine.duration.years} वर्ष`
-  }
+  
 
-  return `<div class="medicineQuantity">${medicine.dosage.length > 0 ? medicine.dosage?.map((item)=> `<p>${item.quantity} - ${item.instructions}</p>`).join("") : ""}<br/>${durationText}</div>`
+  return `<div class="medicineQuantity">${medicine.dosage.length > 0 ? medicine.dosage?.map((item)=> `<p>${item.quantity} - ${item.instructions} - ${
+                item.time === "Morning"
+                  ? "सुबह"
+                  : item.time === "Afternoon"
+                  ? "दोपहर"
+                  : item.time === "Evening"
+                  ? "शाम"
+                  : "रात"
+              }</p>`).join("") : ""}</div>`
 }
 
 // Function to generate prescription print HTML
@@ -78,13 +77,22 @@ export const generatePrescriptionHTML = (
   // Format medicines as table rows
   const medicineRows = prescription.medicines
     ?.map(
-      (med, index) => `
+      (med, index) => {let durationText = ""
+  if (medicine.duration.days > 0) {
+    durationText = `${medicine.duration.days} दिन`
+  } 
+   if (medicine.duration.months > 0) {
+    durationText = durationText + ` ${medicine.duration.months} महीने`
+  } 
+  if (medicine.duration.years > 0) {
+    durationText =  durationText + ` ${medicine.duration.years} वर्ष`
+  } return(`
     <tr>
       <td>${index + 1}</td>
-      <td>${med.name} (${med.type})</td>
+      <td>${med.name} (${med.type}) ${durationText}</td>
       <td>${formatDosageInstruction(med)}</td>
     </tr>
-  `,
+  `)},
     )
     .join("")
 
