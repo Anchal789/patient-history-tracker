@@ -155,7 +155,16 @@ export function PrescriptionForm({
 
     setDiagnosis(selectedDiagnosis.diagnosisText);
     setSpecialAdvice(selectedDiagnosis.specialAdvice || "");
-    setMedicines([...selectedDiagnosis.medicines]);
+   setMedicines([
+      ...(selectedDiagnosis.medicines || [
+        {
+          name: "",
+          type: "Tablet",
+          dosage: [],
+          duration: { days: 0, months: 0, years: 0 },
+        },
+      ]),
+    ]);
   };
 
   // Update the useEffect to fetch saved medicines and diagnoses
