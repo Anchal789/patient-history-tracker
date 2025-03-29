@@ -78,14 +78,14 @@ export const generatePrescriptionHTML = (
   const medicineRows = prescription.medicines
     ?.map(
       (med, index) => {let durationText = ""
-  if (medicine.duration.days > 0) {
-    durationText = `${medicine.duration.days} दिन`
+  if (med.duration.days > 0) {
+    durationText = `${med.duration.days} दिन`
   } 
-   if (medicine.duration.months > 0) {
-    durationText = durationText + ` ${medicine.duration.months} महीने`
+   if (med.duration.months > 0) {
+    durationText = durationText + ` ${med.duration.months} महीने`
   } 
-  if (medicine.duration.years > 0) {
-    durationText =  durationText + ` ${medicine.duration.years} वर्ष`
+  if (med.duration.years > 0) {
+    durationText =  durationText + ` ${med.duration.years} वर्ष`
   } return(`
     <tr>
       <td>${index + 1}</td>
