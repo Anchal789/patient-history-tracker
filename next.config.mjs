@@ -21,6 +21,15 @@ const nextConfig = {
     parallelServerBuildTraces: true,
     parallelServerCompiles: true,
   },
+  webpack(config, { isServer }) {
+    // Add custom Webpack rule for handling .pdf files using asset modules
+    config.module.rules.push({
+      test: /\.pdf$/,
+      type: 'asset/resource',  // Use Webpack 5's asset modules
+    });
+
+    return config;
+  },
 }
 
 mergeConfig(nextConfig, userConfig)

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { CalendarDays, Home, Users, User2, Menu, Pill, Stethoscope } from "lucide-react"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { useState, useEffect } from "react"
+import { ThemeToggle } from "./theme-toggle"
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
@@ -125,8 +126,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
             </SheetContent>
           </Sheet>
 
-          <div className="flex-1">
+          <div className="flex-1 flex justify-between">
             <h1 className="text-lg font-semibold">Rakshanam Health Care</h1>
+            <ThemeToggle />
           </div>
         </header>
 

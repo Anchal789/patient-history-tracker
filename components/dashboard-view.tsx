@@ -15,6 +15,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Skeleton } from "@/components/ui/skeleton"
 import { format } from "date-fns"
 import { FirebaseRulesNotice } from "@/components/firebase-rules-notice"
+import { useTheme } from "next-themes"
 
 export function DashboardView() {
   const router = useRouter()
@@ -79,6 +80,10 @@ export function DashboardView() {
     const results = patients?.filter((patient) => patient.name.toLowerCase().includes(query))
     setSearchResults(results)
   }, [searchQuery, patients])
+
+  const {setTheme , theme} = useTheme()
+
+  useEffect(()=>{setTheme("light")},[])
 
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
