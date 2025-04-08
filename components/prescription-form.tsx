@@ -112,6 +112,7 @@ export function PrescriptionForm({
       name: "",
       type: "Tablet",
       dosage: [],
+      usage: "",
       duration: { days: 0, months: 0, years: 0 },
     },
   ]);
@@ -138,6 +139,7 @@ export function PrescriptionForm({
             name: savedMedicine.name,
             type: savedMedicine.type,
             dosage: [...savedMedicine.defaultDosage],
+            usage: savedMedicine.defaultUsage,
             duration: savedMedicine.defaultDuration
               ? savedMedicine.defaultDuration
               : { days: 0, months: 0, years: 0 }, // Ensure a default duration if not provided
@@ -155,11 +157,12 @@ export function PrescriptionForm({
 
     setDiagnosis(selectedDiagnosis.diagnosisText);
     setSpecialAdvice(selectedDiagnosis.specialAdvice || "");
-   setMedicines([
+    setMedicines([
       ...(selectedDiagnosis.medicines || [
         {
           name: "",
           type: "Tablet",
+          usage: "",
           dosage: [],
           duration: { days: 0, months: 0, years: 0 },
         },
@@ -296,6 +299,7 @@ export function PrescriptionForm({
       {
         name: "",
         type: "Tablet",
+        usage: "",
         dosage: [],
         duration: { days: 0, months: 0, years: 0 },
       },
@@ -739,8 +743,8 @@ export function PrescriptionForm({
                       </Popover>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
+                    <div className="grid grid-cols-1 md:grid-cols-10 gap-4">
+                      <div className="space-y-2 col-span-5">
                         <Label htmlFor={`medicine-${index}-name`}>
                           Medicine Name{" "}
                           <span className="text-destructive">*</span>
@@ -764,7 +768,7 @@ export function PrescriptionForm({
                         )}
                       </div>
 
-                      <div className="space-y-2">
+                      <div className="space-y-2 col-span-2">
                         <Label htmlFor={`medicine-${index}-type`}>Type</Label>
                         <Select
                           value={medicine.type}
@@ -783,6 +787,24 @@ export function PrescriptionForm({
                             ))}
                           </SelectContent>
                         </Select>
+                      </div>
+                      <div className="space-y-2 col-span-3">
+                        <Label htmlFor={`medicine-${index}-usage`}>
+                          Usage{" "}
+                        </Label>
+                        <Input
+                          id={`medicine-${index}-usage`}
+                          value={medicine.usage}
+                          onChange={(e) =>
+                            handleMedicineChange(index, "usage", e.target.value)
+                          }
+                          placeholder="Enter way to consume"
+                          className={
+                            errors[`medicine-${index}-usage`]
+                              ? "border-destructive"
+                              : ""
+                          }
+                        />
                       </div>
                     </div>
 

@@ -89,7 +89,7 @@ export function PrescriptionView({ prescription }: PrescriptionViewProps) {
                   {medicine.name} ({medicine.type})
                 </h4>
               </div>
-              <div className="mt-2 grid grid-cols-2 gap-2 text-sm">
+              <div className="mt-2 grid grid-cols-3 gap-2 text-sm">
                 <div>
                   <span className="text-muted-foreground">Dosage:</span>
                   <ul className="list-disc pl-5 mt-1">
@@ -106,6 +106,12 @@ export function PrescriptionView({ prescription }: PrescriptionViewProps) {
                     {medicine.duration.days > 0 && `${medicine.duration.days} days`}
                     {medicine.duration.months > 0 && ` ${medicine.duration.months} months`}
                     {medicine.duration.years > 0 && ` ${medicine.duration.years} years`}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-muted-foreground">Usage:</span>
+                  <p className="mt-1">
+                    {medicine.usage ? `${medicine.usage}` : "-"}
                   </p>
                 </div>
               </div>

@@ -129,6 +129,7 @@ export function DiagnosesList() {
                 name: "",
                 type: "Tablet",
                 dosage: [],
+                usage: "",
                 duration: { days: 0, months: 0, years: 0 },
               },
             ]
@@ -154,6 +155,7 @@ export function DiagnosesList() {
       {
         name: "",
         type: "Tablet",
+        usage: "",
         dosage: [],
         duration: { days: 0, months: 0, years: 0 },
       },
@@ -266,6 +268,7 @@ export function DiagnosesList() {
             name: savedMedicine.name,
             type: savedMedicine.type,
             dosage: [...savedMedicine.defaultDosage],
+            usage: savedMedicine.defaultUsage,
             duration: { ...savedMedicine.defaultDuration },
           };
         }
@@ -447,48 +450,58 @@ export function DiagnosesList() {
                             Medicines:
                           </h4>
                           <div className="space-y-2">
-                            {(diagnosis.medicines || [])?.map((medicine, index) => (
-                              <div
-                                key={index}
-                                className="border rounded-md p-2"
-                              >
-                                <div className="flex justify-between">
-                                  <h5 className="font-medium text-sm">
-                                    {medicine.name} ({medicine.type})
-                                  </h5>
-                                </div>
-                                <div className="mt-1 grid grid-cols-2 gap-2 text-xs">
-                                  <div>
-                                    <span className="text-muted-foreground">
-                                      Dosage:
-                                    </span>
-                                    <ul className="list-disc pl-5 mt-1">
-                                      {medicine.dosage?.map((dose, idx) => (
-                                        <li key={idx}>
-                                          {dose.time}: {dose.quantity}{" "}
-                                          {dose.instructions
-                                            ? `(${dose.instructions})`
-                                            : ""}
-                                        </li>
-                                      ))}
-                                    </ul>
+                            {(diagnosis.medicines || [])?.map(
+                              (medicine, index) => (
+                                <div
+                                  key={index}
+                                  className="border rounded-md p-2"
+                                >
+                                  <div className="flex justify-between">
+                                    <h5 className="font-medium text-sm">
+                                      {medicine.name} ({medicine.type})
+                                    </h5>
                                   </div>
-                                  <div>
-                                    <span className="text-muted-foreground">
-                                      Duration:
-                                    </span>
-                                    <p className="mt-1">
-                                      {medicine.duration.days > 0 &&
-                                        `${medicine.duration.days} days`}
-                                      {medicine.duration.months > 0 &&
-                                        ` ${medicine.duration.months} months`}
-                                      {medicine.duration.years > 0 &&
-                                        ` ${medicine.duration.years} years`}
-                                    </p>
+                                  <div className="mt-1 grid grid-cols-3 gap-2 text-xs">
+                                    <div>
+                                      <span className="text-muted-foreground">
+                                        Dosage:
+                                      </span>
+                                      <ul className="list-disc pl-5 mt-1">
+                                        {medicine.dosage?.map((dose, idx) => (
+                                          <li key={idx}>
+                                            {dose.time}: {dose.quantity}{" "}
+                                            {dose.instructions
+                                              ? `(${dose.instructions})`
+                                              : ""}
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                    <div>
+                                      <span className="text-muted-foreground">
+                                        Duration:
+                                      </span>
+                                      <p className="mt-1">
+                                        {medicine.duration.days > 0 &&
+                                          `${medicine.duration.days} days`}
+                                        {medicine.duration.months > 0 &&
+                                          ` ${medicine.duration.months} months`}
+                                        {medicine.duration.years > 0 &&
+                                          ` ${medicine.duration.years} years`}
+                                      </p>
+                                    </div>
+                                    <div>
+                                      <span className="text-muted-foreground">
+                                        Usage:
+                                      </span>
+                                      <p className="mt-1">
+                                        {medicine.usage ? medicine.usage : "-"}
+                                      </p>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            ))}
+                              )
+                            )}
                           </div>
                         </div>
                       </div>
@@ -660,6 +673,17 @@ export function DiagnosesList() {
                             </SelectContent>
                           </Select>
                         </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor={`medicine-${index}-usage`}>Usage</Label>
+                        <Input
+                          id={`medicine-${index}-usage`}
+                          value={medicine.usage}
+                          onChange={(e) =>
+                            handleMedicineChange(index, "usage", e.target.value)
+                          }
+                          placeholder="Enter way to consume"
+                        />
                       </div>
 
                       <div className="space-y-2">
