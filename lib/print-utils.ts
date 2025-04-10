@@ -419,11 +419,11 @@ export const generatePrescriptionHTML = (
         durationText = durationText + ` ${med.duration.years} वर्ष`;
       }
       return `
-    <tr>
-      <td>${index + 1}</td>
-      <td class="medicineName"><b>${med.name}</b> <p>${durationText} (${med.type})</p></td>
-      <td>${formatDosageInstruction(med)}</td>
-    </tr>
+    <div>
+      <b>${index + 1}. ${med.name}</b>
+      <p style="margin-top: 4px; margin-bottom: 4px; margin-left : 15px">${durationText} (${med.type})</p>
+      <span>${formatDosageInstruction(med)}</span>
+    </div>
   `;
     })
     .join("");
@@ -542,6 +542,7 @@ export const generatePrescriptionHTML = (
             margin-left: 15px;
           }
           .medicines{
+            margin-top : 20px;
             margin-left: 12px;
     
           }
@@ -549,10 +550,13 @@ export const generatePrescriptionHTML = (
             display: flex;
             flex-direction: column;
             flex-wrap: wrap;
-            gap:10px;
+            gap:5px;
+            margin-left : 15px;
           }
             .medicineIns{
-            margin : 0}
+            font-size: 13px;
+            margin : 0;
+            }
             .medicineName{
             display: flex;
             flex-direction : column;
@@ -700,6 +704,7 @@ export const generatePrescriptionHTML = (
           margin-left: 15px;
         }
         .medicines{
+          margin-top : 20px;
           margin-left: 12px;
         
         }
@@ -707,9 +712,11 @@ export const generatePrescriptionHTML = (
           display: flex;
           flex-direction : column;
           flex-wrap: wrap;
-          gap:10px;
+          gap:5px;
+          margin-left : 15px;
         }
            .medicineIns{
+            font-size: 13px;
             margin : 0}
            .medicineName{
             display: flex;
@@ -845,25 +852,17 @@ export const generatePrescriptionHTML = (
           </div>
           
           <div class="medicines">
-            <table>
-              <thead>
-                <tr>
-                  <th>Sl</th>
-                  <th>Medicine Name</th>
-                  <th>Regime and Instruction</th>
-                </tr>
-              </thead>
-              <tbody class="medicineRows">
-                ${medicineRows}
-              </tbody>
-            </table>
+            <p style="font-weight: bold">Medicines (दवाइयाँ):</p>
+            <div class="medicineRows" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+              ${medicineRows}
+            </div>
           </div>
           
           ${
             prescription.specialAdvice
               ? `
           <div class="advice">
-            <div class="section-title">ADVICE:</div>
+            <div class="section-title">Adivce (सलाह):</div>
             <ul>${adviceItems}</ul>
           </div>
           `
