@@ -203,7 +203,7 @@ export function MedicinesList() {
         name: medicineName,
         type: medicineType,
         defaultDosage: dosages,
-        defaultUsage: usage,
+        defaultUsage: usage || "",
         defaultDuration: {
           days: durationDays,
           months: durationMonths,
@@ -316,9 +316,7 @@ export function MedicinesList() {
                   <TableHead className="hidden md:table-cell">
                     Duration
                   </TableHead>
-                  <TableHead className="hidden md:table-cell">
-                    Usage
-                  </TableHead>
+                  <TableHead className="hidden md:table-cell">Usage</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -429,7 +427,9 @@ export function MedicinesList() {
               </Select>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="usage" className="text-right">Usage</Label>
+              <Label htmlFor="usage" className="text-right">
+                Usage
+              </Label>
               <Input
                 id="usage"
                 value={usage}
@@ -551,7 +551,9 @@ export function MedicinesList() {
                   </Label>
                   <Input
                     id="days"
-                    type="number"
+                    type="text"
+                    pattern="[0-9]*|^$"
+                    inputMode="numeric"
                     min="0"
                     value={durationDays}
                     onChange={(e) =>
@@ -566,7 +568,9 @@ export function MedicinesList() {
                   </Label>
                   <Input
                     id="months"
-                    type="number"
+                    type="text"
+                    pattern="[0-9]*|^$"
+                    inputMode="numeric"
                     min="0"
                     value={durationMonths}
                     onChange={(e) =>
@@ -581,7 +585,9 @@ export function MedicinesList() {
                   </Label>
                   <Input
                     id="years"
-                    type="number"
+                    type="text"
+                    pattern="[0-9]*|^$"
+                    inputMode="numeric"
                     min="0"
                     value={durationYears}
                     onChange={(e) =>

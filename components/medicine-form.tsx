@@ -179,7 +179,7 @@ export function MedicineForm({ medicineId }: MedicineFormProps) {
         name: medicineName,
         type: medicineType,
         defaultDosage: dosages,
-        defaultUsage: usage,
+        defaultUsage: usage || "",
         defaultDuration: {
           days: durationDays,
           months: durationMonths,
@@ -399,7 +399,9 @@ export function MedicineForm({ medicineId }: MedicineFormProps) {
                   </Label>
                   <Input
                     id="days"
-                    type="number"
+                    type="text"
+                    pattern="[0-9]*|^$"
+                    inputMode="numeric"
                     min="0"
                     value={durationDays}
                     onChange={(e) =>
@@ -414,7 +416,9 @@ export function MedicineForm({ medicineId }: MedicineFormProps) {
                   </Label>
                   <Input
                     id="months"
-                    type="number"
+                    type="text"
+                    pattern="[0-9]*|^$"
+                    inputMode="numeric"
                     min="0"
                     value={durationMonths}
                     onChange={(e) =>
@@ -429,7 +433,9 @@ export function MedicineForm({ medicineId }: MedicineFormProps) {
                   </Label>
                   <Input
                     id="years"
-                    type="number"
+                    type="text"
+                    pattern="[0-9]*|^$"
+                    inputMode="numeric"
                     min="0"
                     value={durationYears}
                     onChange={(e) =>

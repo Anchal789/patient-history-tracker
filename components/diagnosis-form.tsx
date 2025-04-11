@@ -417,7 +417,9 @@ export function DiagnosisForm({ diagnosis, onSuccess, onCancel }: DiagnosisFormP
                           </Label>
                           <Input
                             id={`medicine-${index}-days`}
-                            type="number"
+                            type="text"
+                            pattern="[0-9]*|^$"
+                            inputMode="numeric"
                             min="0"
                             value={medicine.duration.days}
                             onChange={(e) => handleDurationChange(index, "days", Number.parseInt(e.target.value) || 0)}
@@ -430,7 +432,9 @@ export function DiagnosisForm({ diagnosis, onSuccess, onCancel }: DiagnosisFormP
                           </Label>
                           <Input
                             id={`medicine-${index}-months`}
-                            type="number"
+                            type="text"
+                            pattern="[0-9]*|^$"
+                            inputMode="numeric"
                             min="0"
                             value={medicine.duration.months}
                             onChange={(e) =>
@@ -445,7 +449,9 @@ export function DiagnosisForm({ diagnosis, onSuccess, onCancel }: DiagnosisFormP
                           </Label>
                           <Input
                             id={`medicine-${index}-years`}
-                            type="number"
+                            type="text"
+                            pattern="[0-9]*|^$"
+                            inputMode="numeric"
                             min="0"
                             value={medicine.duration.years}
                             onChange={(e) => handleDurationChange(index, "years", Number.parseInt(e.target.value) || 0)}

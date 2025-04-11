@@ -139,7 +139,7 @@ export function PrescriptionForm({
             name: savedMedicine.name,
             type: savedMedicine.type,
             dosage: [...savedMedicine.defaultDosage],
-            usage: savedMedicine.defaultUsage,
+            usage: savedMedicine.defaultUsage || "",
             duration: savedMedicine.defaultDuration
               ? savedMedicine.defaultDuration
               : { days: 0, months: 0, years: 0 }, // Ensure a default duration if not provided
@@ -794,7 +794,7 @@ export function PrescriptionForm({
                         </Label>
                         <Input
                           id={`medicine-${index}-usage`}
-                          value={medicine.usage}
+                          value={medicine.usage || ""}
                           onChange={(e) =>
                             handleMedicineChange(index, "usage", e.target.value)
                           }
@@ -947,7 +947,9 @@ export function PrescriptionForm({
                           </Label>
                           <Input
                             id={`medicine-${index}-days`}
-                            type="number"
+                            type="text"
+                            pattern="[0-9]*|^$"
+                            inputMode="numeric"
                             min="0"
                             value={medicine.duration.days}
                             onChange={(e) =>
@@ -969,7 +971,9 @@ export function PrescriptionForm({
                           </Label>
                           <Input
                             id={`medicine-${index}-months`}
-                            type="number"
+                            type="text"
+                            pattern="[0-9]*|^$"
+                            inputMode="numeric"
                             min="0"
                             value={medicine.duration.months}
                             onChange={(e) =>
@@ -991,7 +995,9 @@ export function PrescriptionForm({
                           </Label>
                           <Input
                             id={`medicine-${index}-years`}
-                            type="number"
+                            type="text"
+                            pattern="[0-9]*|^$"
+                            inputMode="numeric"
                             min="0"
                             value={medicine.duration.years}
                             onChange={(e) =>

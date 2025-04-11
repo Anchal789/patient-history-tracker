@@ -20,7 +20,6 @@ interface PatientFormProps {
 }
 
 export function PatientForm({ patientId }: PatientFormProps = {}) {
-  console.log(patientId)
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [isSaving, setIsSaving] = useState(false)

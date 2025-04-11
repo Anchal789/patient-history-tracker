@@ -268,7 +268,7 @@ export function DiagnosesList() {
             name: savedMedicine.name,
             type: savedMedicine.type,
             dosage: [...savedMedicine.defaultDosage],
-            usage: savedMedicine.defaultUsage,
+            usage: savedMedicine.defaultUsage || "",
             duration: { ...savedMedicine.defaultDuration },
           };
         }
@@ -809,7 +809,9 @@ export function DiagnosesList() {
                             </Label>
                             <Input
                               id={`medicine-${index}-days`}
-                              type="number"
+                              type="text"
+                              pattern="[0-9]*|^$"
+                              inputMode="numeric"
                               min="0"
                               value={medicine.duration.days}
                               onChange={(e) =>
@@ -831,7 +833,9 @@ export function DiagnosesList() {
                             </Label>
                             <Input
                               id={`medicine-${index}-months`}
-                              type="number"
+                              type="text"
+                              pattern="[0-9]*|^$"
+                              inputMode="numeric"
                               min="0"
                               value={medicine.duration.months}
                               onChange={(e) =>
@@ -853,7 +857,9 @@ export function DiagnosesList() {
                             </Label>
                             <Input
                               id={`medicine-${index}-years`}
-                              type="number"
+                              type="text"
+                              pattern="[0-9]*|^$"
+                              inputMode="numeric"
                               min="0"
                               value={medicine.duration.years}
                               onChange={(e) =>
