@@ -37,8 +37,9 @@ import type { SavedMedicine, CommonDiagnosis, SavedPanchkarmaProcess } from "@/l
 // Add a new import for the Command component
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Check, ChevronsUpDown, X } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
 
 interface PrescriptionFormProps {
   patientId: string
@@ -62,6 +63,14 @@ export function PrescriptionForm({ patientId, prescriptionId }: PrescriptionForm
   const [diagnoses, setDiagnoses] = useState<CommonDiagnosis[]>([])
   const [chiefComplaints, setChiefComplaints] = useState<ChiefComplaint[]>([])
   const [panchkarmaProcesses, setPanchkarmaProcesses] = useState<SavedPanchkarmaProcess[]>([])
+
+  // Add state for selected chief complaints
+  const [selectedChiefComplaints, setSelectedChiefComplaints] = useState<ChiefComplaint[]>([])
+  
+  // Add state for popover open/close
+  const [chiefComplaintsOpen, setChiefComplaintsOpen] = useState(false)
+  const [diagnosisOpen, setDiagnosisOpen] = useState(false)
+  const [panchkarmaOpen, setPanchkarmaOpen] = useState(false)
 
   const [date, setDate] = useState<Date>(new Date())
   const [weight, setWeight] = useState("")
@@ -115,7 +124,7 @@ export function PrescriptionForm({ patientId, prescriptionId }: PrescriptionForm
     )
   }
 
-  // Add a function to handle selecting a diagnosis
+  // Updated function to handle selecting a diagnosis
   const handleSelectDiagnosis = (diagnosisId: string) => {
     const selectedDiagnosis = diagnoses?.find((d) => d.id === diagnosisId)
     if (!selectedDiagnosis) return
@@ -133,20 +142,52 @@ export function PrescriptionForm({ patientId, prescriptionId }: PrescriptionForm
         },
       ]),
     ])
+    setDiagnosisOpen(false)
   }
 
-  // Add function to handle selecting chief complaint
+  // Updated function to handle selecting chief complaint (multiple selection)
   const handleSelectChiefComplaint = (complaintId: string) => {
     const selectedComplaint = chiefComplaints?.find((c) => c.id === complaintId)
     if (!selectedComplaint) return
 
-    setChiefComplaintsText(selectedComplaint.complaint)
+    const isAlreadySelected = selectedChiefComplaints.some((c) => c.id === complaintId)
+    
+    if (isAlreadySelected) {
+      // Remove if already selected
+      const updatedComplaints = selectedChiefComplaints.filter((c) => c.id !== complaintId)
+      setSelectedChiefComplaints(updatedComplaints)
+      setChiefComplaintsText(updatedComplaints.map(c => c.complaint).join(', '))
+    } else {
+      // Add if not selected
+      const updatedComplaints = [...selectedChiefComplaints, selectedComplaint]
+      setSelectedChiefComplaints(updatedComplaints)
+      setChiefComplaintsText(updatedComplaints.map(c => c.complaint).join(', '))
+    }
   }
 
-  // Add function to handle selecting Panchkarma process
+  // Function to remove a selected chief complaint
+  const handleRemoveChiefComplaint = (complaintId: string) => {
+    const updatedComplaints = selectedChiefComplaints.filter((c) => c.id !== complaintId)
+    setSelectedChiefComplaints(updatedComplaints)
+    setChiefComplaintsText(updatedComplaints.map(c => c.complaint).join(', '))
+  }
+
+  // Updated function to handle selecting Panchkarma process
   const handleSelectPanchkarmaProcess = (processId: string) => {
     const selectedProcess = panchkarmaProcesses?.find((p) => p.id === processId)
     if (!selectedProcess) return
+
+    // Check if the process is already added
+    const isAlreadyAdded = panchkarmaProcessesList.some((process) => process.name === selectedProcess.name)
+    if (isAlreadyAdded) {
+      toast({
+        title: "Process Already Added",
+        description: `${selectedProcess.name} is already in the list`,
+        variant: "destructive",
+      })
+      setPanchkarmaOpen(false)
+      return
+    }
 
     const newProcess: PanchkarmaProcess = {
       name: selectedProcess.name,
@@ -154,6 +195,7 @@ export function PrescriptionForm({ patientId, prescriptionId }: PrescriptionForm
     }
 
     setPanchkarmaProcessesList([...panchkarmaProcessesList, newProcess])
+    setPanchkarmaOpen(false)
   }
 
   // Add function to handle Panchkarma process changes
@@ -549,20 +591,59 @@ export function PrescriptionForm({ patientId, prescriptionId }: PrescriptionForm
               </div>
             </div>
 
+            {/* Updated Chief Complaints Section with Multiple Selection */}
             <div className="space-y-2">
-              <Label htmlFor="chiefComplaintsSelector">Select Chief Complaint</Label>
-              <Select onValueChange={handleSelectChiefComplaint}>
-                <SelectTrigger id="chiefComplaintsSelector">
-                  <SelectValue placeholder="Select a chief complaint" />
-                </SelectTrigger>
-                <SelectContent>
-                  {chiefComplaints?.map((complaint) => (
-                    <SelectItem key={complaint.id} value={complaint.id}>
+              <Label htmlFor="chiefComplaintsSelector">Search & Select Chief Complaints</Label>
+              <Popover open={chiefComplaintsOpen} onOpenChange={setChiefComplaintsOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" role="combobox" className="w-full justify-between bg-transparent">
+                    {selectedChiefComplaints.length > 0 
+                      ? `${selectedChiefComplaints.length} complaint(s) selected` 
+                      : "Search and select chief complaints..."}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0">
+                  <Command>
+                    <CommandInput placeholder="Search chief complaints..." />
+                    <CommandList>
+                      <CommandEmpty>No chief complaint found.</CommandEmpty>
+                      <CommandGroup>
+                        {chiefComplaints?.map((complaint) => (
+                          <CommandItem
+                            key={complaint.id}
+                            value={complaint.name}
+                            onSelect={() => handleSelectChiefComplaint(complaint.id)}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                selectedChiefComplaints.some(c => c.id === complaint.id) ? "opacity-100" : "opacity-0",
+                              )}
+                            />
+                            {complaint.name}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              
+              {/* Display selected chief complaints as badges */}
+              {selectedChiefComplaints.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {selectedChiefComplaints.map((complaint) => (
+                    <Badge key={complaint.id} variant="secondary" className="flex items-center gap-1">
                       {complaint.name}
-                    </SelectItem>
+                      <X 
+                        className="h-3 w-3 cursor-pointer" 
+                        onClick={() => handleRemoveChiefComplaint(complaint.id)}
+                      />
+                    </Badge>
                   ))}
-                </SelectContent>
-              </Select>
+                </div>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -580,20 +661,42 @@ export function PrescriptionForm({ patientId, prescriptionId }: PrescriptionForm
               {errors.chiefComplaints && <p className="text-sm text-destructive">{errors.chiefComplaints}</p>}
             </div>
 
+            {/* Updated Diagnosis Section with Search */}
             <div className="space-y-2">
-              <Label htmlFor="diagnosisSelector">Select Common Diagnosis</Label>
-              <Select onValueChange={handleSelectDiagnosis}>
-                <SelectTrigger id="diagnosisSelector">
-                  <SelectValue placeholder="Select a diagnosis" />
-                </SelectTrigger>
-                <SelectContent>
-                  {diagnoses?.map((diagnosis) => (
-                    <SelectItem key={diagnosis.id} value={diagnosis.id}>
-                      {diagnosis.diseaseName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label htmlFor="diagnosisSelector">Search & Select Diagnosis</Label>
+              <Popover open={diagnosisOpen} onOpenChange={setDiagnosisOpen}>
+                <PopoverTrigger asChild>
+                  <Button variant="outline" role="combobox" className="w-full justify-between bg-transparent">
+                    {diagnosis || "Search and select diagnosis..."}
+                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0">
+                  <Command>
+                    <CommandInput placeholder="Search diagnosis..." />
+                    <CommandList>
+                      <CommandEmpty>No diagnosis found.</CommandEmpty>
+                      <CommandGroup>
+                        {diagnoses?.map((diagnosisItem) => (
+                          <CommandItem
+                            key={diagnosisItem.id}
+                            value={diagnosisItem.diseaseName}
+                            onSelect={() => handleSelectDiagnosis(diagnosisItem.id)}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                diagnosis === diagnosisItem.diagnosisText ? "opacity-100" : "opacity-0",
+                              )}
+                            />
+                            {diagnosisItem.diseaseName}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -926,7 +1029,7 @@ export function PrescriptionForm({ patientId, prescriptionId }: PrescriptionForm
               ))}
             </div>
 
-            {/* Panchkarma Processes Section */}
+            {/* Updated Panchkarma Processes Section */}
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <Button
@@ -943,19 +1046,40 @@ export function PrescriptionForm({ patientId, prescriptionId }: PrescriptionForm
               {showPanchkarma && (
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label htmlFor="panchkarmaSelector">Select Panchkarma Process</Label>
-                    <Select onValueChange={handleSelectPanchkarmaProcess}>
-                      <SelectTrigger id="panchkarmaSelector">
-                        <SelectValue placeholder="Select a Panchkarma process" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {panchkarmaProcesses?.map((process) => (
-                          <SelectItem key={process.id} value={process.id}>
-                            {process.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <Label htmlFor="panchkarmaSelector">Search & Select Panchkarma Process</Label>
+                    <Popover open={panchkarmaOpen} onOpenChange={setPanchkarmaOpen}>
+                      <PopoverTrigger asChild>
+                        <Button variant="outline" role="combobox" className="w-full justify-between bg-transparent">
+                          Search and select Panchkarma process...
+                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-full p-0">
+                        <Command>
+                          <CommandInput placeholder="Search Panchkarma process..." />
+                          <CommandList>
+                            <CommandEmpty>No Panchkarma process found.</CommandEmpty>
+                            <CommandGroup>
+                              {panchkarmaProcesses?.map((process) => {
+                                const isAlreadyAdded = panchkarmaProcessesList.some((addedProcess) => addedProcess.name === process.name)
+                                return (
+                                  <CommandItem
+                                    key={process.id}
+                                    value={process.name}
+                                    onSelect={() => handleSelectPanchkarmaProcess(process.id)}
+                                    disabled={isAlreadyAdded}
+                                    className={isAlreadyAdded ? "opacity-50 cursor-not-allowed" : ""}
+                                  >
+                                    <Check className={cn("mr-2 h-4 w-4", isAlreadyAdded ? "opacity-100" : "opacity-0")} />
+                                    {process.name} {isAlreadyAdded && "(Already Added)"}
+                                  </CommandItem>
+                                )
+                              })}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
                   </div>
 
                   <div className="flex justify-between items-center">
