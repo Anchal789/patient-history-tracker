@@ -98,7 +98,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				href='/chief-complaints'
 				className={`flex items-center gap-2 p-2 rounded-md ${
 					pathname === "/chief-complaints"
-						? "bg-blue-500 text-white"
+						? "bg-primary/10 text-primary"
 						: "hover:bg-accent"
 				}`}
 			>
@@ -109,7 +109,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 				href='/panchkarma'
 				className={`flex items-center gap-2 p-2 rounded-md ${
 					pathname === "/panchkarma"
-						? "bg-purple-500 text-white"
+						? "bg-primary/10 text-primary"
 						: "hover:bg-accent"
 				}`}
 			>
