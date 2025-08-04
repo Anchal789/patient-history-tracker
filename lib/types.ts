@@ -30,7 +30,7 @@ export interface Prescription {
   specialAdvice?: string
   followUpDate: string | null
   appointmentId?: string
-  panchkarmaProcesses?: PanchkarmaProcess[]
+  panchkarmaProcesses?: PanchkarmaProcess[] | null
 }
 
 export interface Dosage {

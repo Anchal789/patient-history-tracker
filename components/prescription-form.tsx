@@ -502,7 +502,7 @@ export function PrescriptionForm({ patientId, prescriptionId }: PrescriptionForm
         specialAdvice,
         followUpDate: followUpDate ? followUpDate.toISOString() : null,
         appointmentId,
-        panchkarmaProcesses: panchkarmaProcessesList.length > 0 ? panchkarmaProcessesList : undefined,
+        panchkarmaProcesses: panchkarmaProcessesList.length > 0 ? panchkarmaProcessesList : null,
       }
 
       if (prescriptionId) {
